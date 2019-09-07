@@ -1,0 +1,9 @@
+#El formato es: 
+#(tab) Quien-Lo que hizo o está haciendo. (salvo en ToDo que va solo lo que se tiene que hacer). (Dejar una linea entre ToDo, Doing y Done).
+
+ToDo:
+
+Doing:
+
+Done:
+    Nacho-Creacion del Repo
