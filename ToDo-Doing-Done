@@ -2,7 +2,7 @@
 #(tab) Quien-Lo que hizo o está haciendo. (salvo en ToDo que va solo lo que se tiene que hacer). (Dejar una linea entre ToDo, Doing y Done).
 
 ToDo:
-    readMatrixDimention
+    ---->readMatrixDimention
     create_matrix
     fillUpMatrices
     matrix_multiply
@@ -11,7 +11,7 @@ ToDo:
     error
     
 Doing:
-
+    readMatrixDimention--->Mauro
 Done:
     Nacho-Creacion del Repo
     Axel-Make up
