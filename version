@@ -1,3 +1,6 @@
 COMENTARIO PARA NOSOTROS: a que se referira con version?
 
-Ahora les preguntó por el grupo, quizás sea la versión de linux o algo raro.. supongo que es la versión del código, pero no sé si tendría sentido tampoco..
+Respuesta del docente:
+"Apliquen el criterio que mejor les parezca, y explicítenlo! "
+
+Podemos hacer que sea cada commit que hacemos con cambio de código una versión. Empezamos con la 1.0 que armó Axel, y vamos haciendo 1.x, y si hacemos un cambio importante pasamos a 2.0 y así.
