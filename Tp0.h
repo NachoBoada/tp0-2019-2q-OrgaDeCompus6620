@@ -18,7 +18,6 @@ matrix_t* create_matrix(size_t rows, size_t cols);
 void destroy_matrix(matrix_t* m);
 
 //Lee los valores que se ingresan por stdin hasta llegar al \n y corta. De haber error corta la ejecucion.
-fillUpMatrices(matrix_a,matrix_b);
-
+void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention);
 
 #endif // TP0_H_INCLUDED
