@@ -36,7 +36,7 @@ size_t readMatrixDimention()
         }
         else
         {
-            //LONG NUMBER + 1 digit
+            //LONG NUMBER
             result = (result*10) + (string[i] - 48);
         }
     }
