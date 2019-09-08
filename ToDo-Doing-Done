@@ -7,7 +7,7 @@ ToDo:
     print_matrix
     error (Ante un error, el progama deber ́a informar la situaci ́on inmediatamente (porstderr) ydetener su ejecución).
     Probar que el programa corre correctamente en NetBSD/pmax(usando el simulador GXemul [1]) y Linux. (Portabilidad).
-    Informe.   
+    Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
     
 Doing:
 
