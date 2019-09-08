@@ -12,6 +12,18 @@ int error(){ //COMENTARIO PARA NOSOTROS: Esta funcion deberia ejecutarse siempre
              // si hay estructuras de datos con memoria ya almacenada primero deberan liberarse y despues cortar el programa
     return 0;
 }
+//PRE: RECIBE UN CHAR*
+//POST: DEVUELVE LA DIMENSION O 0(CERO) SI HAY ERROR. NO SE ACEPTA DIMENSION 0.
+int readMatrixDimention(char* dimLeida){
+    int codigoErrorDimension=123;
+    int dimension = atoi(dimLeida);
+    if (dimension==0){
+        error();//emitir error
+        exit(codigoErrorDimension);
+    }//end true if condition
+    return dimension;
+};
+
 void outputFile(char fileName[]){
     //ADAPTS FILE NAME
     char s[100];
