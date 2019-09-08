@@ -2,8 +2,7 @@
 #(tab) Quien-Lo que hizo o está haciendo. (salvo en ToDo que va solo lo que se tiene que hacer). (Dejar una linea entre ToDo, Doing y Done).
 
 ToDo:
-    
-    fillUpMatrices
+   
     matrix_multiply    
     print_matrix
     error
@@ -11,6 +10,7 @@ ToDo:
 Doing:
     Nacho-create_matrix
     Nacho-destroy_matrix
+    Nacho-fillUpMatrices
     
 Done:
     Nacho-Creacion del Repo
