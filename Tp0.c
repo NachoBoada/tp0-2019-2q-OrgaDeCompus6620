@@ -7,7 +7,7 @@ struct matrix {
     size_t rows;
     size_t cols;
     double* array;
-};
+}matrix_t; // ACA SE AGREGO EL ALIAS
 
 int error(){ //COMENTARIO PARA NOSOTROS: Esta funcion deberia ejecutarse siempre que haya un error y debeira hacer lo que haya que hacer ante el y luego cortar el programa
              // si hay estructuras de datos con memoria ya almacenada primero deberan liberarse y despues cortar el programa
