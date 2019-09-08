@@ -12,7 +12,7 @@ int error(){ //COMENTARIO PARA NOSOTROS: Esta funcion deberia ejecutarse siempre
              // si hay estructuras de datos con memoria ya almacenada primero deberan liberarse y despues cortar el programa
     return 0;
 }
-//PRE:  DIMENSION DATA
+//PRE:  DIMENTION DATA
 //POST: MATRIX DIMENTION OR ABORT PROGRAM
 
 size_t readMatrixDimention()
