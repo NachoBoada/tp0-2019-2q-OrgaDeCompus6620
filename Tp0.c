@@ -136,7 +136,18 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /***
    }
 }
 
-
+matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
+    size_t dim = matrix_a->cols; //ES LO MISMO AL SER MATRICES CUADRADAS
+    double aux_elem = 0;
+    matrix_t* matriz_c = create_matrix(dim,dim);
+    for (int i=0;i<(dim*dim);i++){
+        for(int j=0;j<(dim*dim);j++){
+            aux_elem+=(*((matrix_a->array)+(i*dim +j*sizeof(double))))*(*((matrix_b->array) + (i*sizeof(double)+j*dim)));
+        }
+        *((matriz_c->array)+i*sizeof(double))=aux_elem;
+    }
+    return matriz_c;
+};
 
 int main(int argc, const char* argv[])
 {
