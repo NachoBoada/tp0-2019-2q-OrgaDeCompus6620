@@ -12,17 +12,42 @@ int error(){ //COMENTARIO PARA NOSOTROS: Esta funcion deberia ejecutarse siempre
              // si hay estructuras de datos con memoria ya almacenada primero deberan liberarse y despues cortar el programa
     return 0;
 }
-//PRE: RECIBE UN CHAR*
-//POST: DEVUELVE LA DIMENSION O 0(CERO) SI HAY ERROR. NO SE ACEPTA DIMENSION 0.
-int readMatrixDimention(char* dimLeida){
-    int codigoErrorDimension=123;
-    int dimension = atoi(dimLeida);
-    if (dimension==0){
-        error();//emitir error
-        exit(codigoErrorDimension);
-    }//end true if condition
-    return dimension;
-};
+//PRE:  DIMENSION DATA
+//POST: MATRIX DIMENTION OR ABORT PROGRAM
+
+size_t readMatrixDimention()
+{
+    char string[20];//TODO -- NO SE COMO RESOLVER ESTO PARA QUE SEA GENERICO
+    scanf("%s",string);
+
+    long result = 0;
+    if (strlen(string)>10){
+        //ERROR - BIGGER THAN INT
+        //error();
+        exit(1);//TODO -- SE QUITA Y QURDA ERROR SOLO
+    }
+    for (int i = 0; i < strlen(string); i++)
+    {
+        if (((int)string[i]< 48) || ((int)string[i]>57))
+        {
+            //ERROR - NOT A NUMBER
+            //error();
+            exit(2);//TODO -- SE QUITA Y QURDA ERROR SOLO
+        }
+        else
+        {
+            //LONG NUMBER + 1 digit
+            result = (result*10) + (string[i] - 48);
+        }
+    }
+    if (result>4294967295) //UPPER LIMIT
+    {
+        //ERROR - OVERFLOW
+        //error();
+        exit(3);//TODO -- SE QUITA Y QURDA ERROR SOLO
+    }
+    else return (size_t) (result);
+}
 
 void outputFile(char fileName[]){
     //ADAPTS FILE NAME
