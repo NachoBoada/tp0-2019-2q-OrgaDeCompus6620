@@ -138,14 +138,24 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /***
 
 matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
     size_t dim = matrix_a->cols; //ES LO MISMO AL SER MATRICES CUADRADAS
-    double aux_elem = 0;
-    matrix_t* matriz_c = create_matrix(dim,dim);
-    for (int i=0;i<(dim*dim);i++){
-        for(int j=0;j<(dim*dim);j++){
-            aux_elem+=(*((matrix_a->array)+(i*dim +j*sizeof(double))))*(*((matrix_b->array) + (i*sizeof(double)+j*dim)));
+    size_t row=0; //CONTROLA LAS FILAS DE LA MATRIZ A PARA MULTIPLICAR
+    size_t column=0; //CONTROLA LAS COLUMNAS DE LA MATRIZ B PARA MULTIPLICAR
+    size_t i=0; //CONTADOR PARA REALIZAR TODAS LAS OPERACIONES
+    double elem=0; // ACUMULADOR DE RESULTADO PARCIAL
+    matrix_t* matriz_c = create_matrix(dim,dim); //CREO LA MATRIZ QUE VOY A DEVOLVER
+    do{
+        elem=0;
+        for (size_t j=0;j<dim;j++){
+            elem+= matrix_a->array[row*dim +j] * matrix_b->array[j*dim +column]; //MULTIPLICO ELEMENTO A ELEMENTO
         }
-        *((matriz_c->array)+i*sizeof(double))=aux_elem;
-    }
+        column++; // UNA VEZ QUE OBTENGO UN NUMERO PASO A AL SIGUIENTE
+        matriz_c->array[i]=elem; // GUARDO EL ELEMENTO CALCULADO
+        if ((column % dim)==0){ //SI YA HICE UN MULTIPLO DE DIM DE OPERACIONES PASO A LA SIGUIENTE FILA
+            column=0; //REINICIO EL CONTADOR DE COLUMNAS
+            row++; //PASO A LA SIGUIENTE FILA
+        }
+        i++; //INCREMENTO LA CANTIDAD DE ELEMENTOS CALCULADOS
+    }while (i< (dim*dim));
     return matriz_c;
 };
 
