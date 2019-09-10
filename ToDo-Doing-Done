@@ -3,19 +3,19 @@
 
 ToDo:
     Agregar funcionalidad para leer más de una línea por stdin (leer hsata la señal de EOF).
-    --- matrix_multiply    
     print_matrix
     error (Ante un error, el progama deber ́a informar la situaci ́on inmediatamente (porstderr) ydetener su ejecución).
     Probar que el programa corre correctamente en NetBSD/pmax(usando el simulador GXemul [1]) y Linux. (Portabilidad).
     Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
     
 Doing:
-    Mauro - matrix_multiply
+
 Done:
     Nacho-Creacion del Repo
     Axel-Make up
     Axel-Manejo de comandos
     Mauro-readMatrixDimention
+    Mauro - matrix_multiply
     Nacho-create_matrix
     Nacho-destroy_matrix
     Nacho-fillUpMatrices
