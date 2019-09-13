@@ -5,13 +5,16 @@
 struct matrix;
 typedef struct matrix matrix_t;
 
-//PRE: RECIBE UN CHAR*
+//PRE: RECIBE UNA ENTRADA DE STDIN
 //POST: DEVUELVE LA DIMENSION O 0(CERO) SI HAY ERROR. NO SE ACEPTA DIMENSION 0.
-int readMatrixDimention(char* dimLeida);
+int readMatrixDimention();
 
-void outputFile(char fileName[]);
+//PRE: RECIBE UN PUNTERO A MATRIZ
+//POST: DEVUELVE POR STDOUT LA MATRIZ PASADA POR PARAMETRO
+void outputFile(matrix_t* matrix_c);
 
-//Crea una matriz_t de dimension rowsXcols
+//PRE: RECIBE FILA Y COLUMNAS
+//POST: DEVUELVE Y CREA UNA MATRIZ DE DICHAS DIMENSIONES VACIA
 matrix_t* create_matrix(size_t rows, size_t cols);
 
 // Destructor de matrix_t

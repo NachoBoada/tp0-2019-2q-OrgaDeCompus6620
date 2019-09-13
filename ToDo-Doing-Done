@@ -6,7 +6,6 @@ ToDo:
     
     
 Doing:
-    Mauro - matrix_multiply
 
     Axel - Agregar funcionalidad para leer más de una línea por stdin (leer hsata la señal de EOF).
     Axel - error (Ante un error, el progama deber ́a informar la situaci ́on inmediatamente (porstderr) ydetener su ejecución).
@@ -15,10 +14,16 @@ Doing:
 
 Done:
     Nacho-Creacion del Repo
+
     Axel-Make up
     Axel-Manejo de comandos
+
     Mauro-readMatrixDimention
+    Mauro - matrix_multiply
+
     Nacho-create_matrix
     Nacho-destroy_matrix
     Nacho-fillUpMatrices
+
+    Mauro - matrix_multiply
     
