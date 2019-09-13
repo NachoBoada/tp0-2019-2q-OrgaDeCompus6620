@@ -11,7 +11,7 @@ int readMatrixDimention(char* dimLeida);
 
 void outputFile(char fileName[]);
 
-//Crea una matriz_t de domension rowsXcols
+//Crea una matriz_t de dimension rowsXcols
 matrix_t* create_matrix(size_t rows, size_t cols);
 
 // Destructor de matrix_t

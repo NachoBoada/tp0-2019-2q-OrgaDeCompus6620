@@ -11,6 +11,9 @@ typedef struct matrix {
 
 int error(){ //COMENTARIO PARA NOSOTROS: Esta funcion deberia ejecutarse siempre que haya un error y debeira hacer lo que haya que hacer ante el y luego cortar el programa
              // si hay estructuras de datos con memoria ya almacenada primero deberan liberarse y despues cortar el programa
+
+             //QUE RECIBA SRINTG Y NUM
+
     return 0;
 }
 
@@ -97,16 +100,10 @@ void destroy_matrix(matrix_t* m){
 
 
 void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /****Hay que agregar un EOF para leer cuando hay mas de una linea***/
-    dimention = 9;
     char *read;
-    read = malloc(sizeof(char) * dimention * 2 * 2 * 11); // 10 digitos por elemento parece razonable mas uno por cada espacio.
-    if (read == NULL){
-        ////error("no hay memoria);
-    }
+    read = malloc(sizeof(char) * dimention * dimention * 2 * 26); // According to IEEE 754-1985, the longest notation for value represented by double type, i.e.: -2.2250738585072020E-308 has 24 chars.
 
-    double *allNumbers = NULL;
-    allNumbers = malloc(sizeof(double) * (dimention * 2 * 2)); // cada matriz tiene 2N elementos, y son 2 matrices
-    if (allNumbers == NULL){
+    if (read == NULL){
         ////error("no hay memoria);
     }
 
@@ -122,7 +119,6 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /***
     double element;
     int elementsQuantity = 0, posInMatrixA = 0, posInMatrixB = 0;
     while( separator != NULL ) {
-        printf( "sepa %s\n", separator );
         element = atof(separator);
         if (elementsQuantity < (2 * dimention)){ //dimention * 2 cantidad de elements van a la matriz a, y el resto a la matriz b;
             matrix_a->array[posInMatrixA] = element;
@@ -131,7 +127,6 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /***
             matrix_b->array[posInMatrixB] = element;
             posInMatrixB++;
         }
-        printf( "element %f\n", element );
         separator = strtok(NULL, "' '");
    }
 }
@@ -171,6 +166,8 @@ int main(int argc, const char* argv[])
     destroy_matrix(matrix_a);
     destroy_matrix(matrix_b);
     destroy_matrix(matrix_c);
+
+    //CORREGIR PARA QUE HAGA MAS DE UNA MULTIPLICACION
 
     /*COMENTARIO PARA NOSOTROS:
     Resumiendo, hay que hacer las funciones:
