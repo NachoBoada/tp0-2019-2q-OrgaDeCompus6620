@@ -17,8 +17,6 @@ int error(){ //COMENTARIO PARA NOSOTROS: Esta funcion deberia ejecutarse siempre
     return 0;
 }
 
-//PRE: RECIBE UN CHAR*
-//POST: DEVUELVE LA DIMENSION O 0(CERO) SI HAY ERROR. NO SE ACEPTA DIMENSION 0.
 size_t readMatrixDimention()
 {
     char string[20];//TODO -- NO SE COMO RESOLVER ESTO PARA QUE SEA GENERICO
@@ -74,7 +72,6 @@ void outputFile(char fileName[]){
 	while(c != EOF);
 }
 
-// Constructor de matrix_t
 matrix_t* create_matrix(size_t rows, size_t cols){
     matrix_t *matriz = malloc(sizeof(matrix_t));
     if (matriz == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
@@ -90,14 +87,10 @@ matrix_t* create_matrix(size_t rows, size_t cols){
     return matriz;
 }
 
-
-// Destructor de matrix_t
 void destroy_matrix(matrix_t* m){
     free(m->array);
     free(m);
 }
-
-
 
 void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /****Hay que agregar un EOF para leer cuando hay mas de una linea***/
     char *read;
@@ -132,6 +125,18 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /***
 }
 
 matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
+
+
+char* readInput(){
+
+    int a;
+    int b;
+
+    scanf("%d", &a)
+
+    scanf("%f", &b)
+
+}
     size_t dim = matrix_a->cols; //ES LO MISMO AL SER MATRICES CUADRADAS
     size_t row=0; //CONTROLA LAS FILAS DE LA MATRIZ A PARA MULTIPLICAR
     size_t column=0; //CONTROLA LAS COLUMNAS DE LA MATRIZ B PARA MULTIPLICAR
@@ -171,6 +176,8 @@ int main(int argc, const char* argv[])
 
 
     //MAIN PROGRAM
+
+    char* entireInput = readInput();
 
     int dimention = readMatrixDimention(); //COMENTARIO PARA NOSOTROS: Lee el primer valor ingresado por stdin (que supuestamente es el N. Si no es un numero ejectua "error()"
 
