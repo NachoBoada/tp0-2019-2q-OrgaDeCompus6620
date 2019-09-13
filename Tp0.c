@@ -176,37 +176,25 @@ int main(int argc, const char* argv[])
 
 
     //MAIN PROGRAM
+    bool thereAreMoreProductsToDo = true;
+    while (thereAreMoreProductsToDo){
 
-    char* entireInput = readInput();
+        int *dimention;
+        char* entireInput = readInput(dimention);
 
-    int dimention = readMatrixDimention(); //COMENTARIO PARA NOSOTROS: Lee el primer valor ingresado por stdin (que supuestamente es el N. Si no es un numero ejectua "error()"
+        matrix_t* matrix_a = create_matrix(dimention,dimention); //tiene que poder leer una linea
+        matrix_t* matrix_b = create_matrix(dimention,dimention);
 
-    matrix_t* matrix_a = create_matrix(dimention,dimention);
-    matrix_t* matrix_b = create_matrix(dimention,dimention);
+        fillUpMatrices(matrix_a,matrix_b, dimention,entireInput);
 
-    fillUpMatrices(matrix_a,matrix_b, dimention); //COMENTARIO PARA NOSOTROS: Lee los siguientes valores que se ingresan por stdin hasta llegar al \n y corta. Si en algun momento hay algo fuera de lugar
-                                       //ejecuta a "error()"
+        matrix_t* matrix_c = matrix_multiply(matrix_a,matrix_b);
 
-    matrix_t* matrix_c = matrix_multiply(matrix_a,matrix_b);
+        print_matrix(fp,matrix_c);
 
-    //print_matrix(fp,matrix_c);
-
-    destroy_matrix(matrix_a);
-    destroy_matrix(matrix_b);
-    destroy_matrix(matrix_c);
-
-    //CORREGIR PARA QUE HAGA MAS DE UNA MULTIPLICACION
-
-    /*COMENTARIO PARA NOSOTROS:
-    Resumiendo, hay que hacer las funciones:
-
-    readMatrixDimention
-    create_matrix
-    fillUpMatrices
-    matrix_multiply
-    destroy_matrix
-    error
-    */
+        destroy_matrix(matrix_a);
+        destroy_matrix(matrix_b);
+        destroy_matrix(matrix_c);
+    }
 
     return 0;
 }
