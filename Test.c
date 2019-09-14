@@ -2,22 +2,21 @@
 #include<stdbool.h>
 #include<stdlib.h>
 
-void raiseError(const char* s){
+void raiseError(const char* s,bool* error){
     fprintf(stderr,"\n");
     fprintf(stderr,"=======================\n");
     fprintf(stderr,"ERROR MESSAGE: %s\n",s);
     fprintf(stderr,"=======================\n");
+    *error = true;
 }
 
-double* readInput(int* dimention){
+double* readInput(int* dimention, bool *error){
 
     float x;
     double y;
     double* array;
     int elementIndex;
     int returnValue;
-
-    bool error = false;
 
     int amountOfSuccesfullyReadInputs = 0;
     bool endOfLine = false;
@@ -33,12 +32,11 @@ double* readInput(int* dimention){
 
         //CHECK IF INPUT IS NUMERIC
         if (returnValue != 1){
-            raiseError("Input no numerico");
+            raiseError("Input no numerico",error);
 
             if (array != NULL){
                 free(array);
             }
-            error = true;
             break;
         }
 
@@ -50,8 +48,7 @@ double* readInput(int* dimention){
             //CHECK IF INPUT IS TYPE UINT
             float mantiza = x - (int)x;
             if (mantiza > 0 || (x <= 0)){
-                raiseError("La dimension no es entera positiva");
-                error = true;
+                raiseError("La dimension no es entera positiva",error);
                 break;
             }
 
@@ -60,8 +57,7 @@ double* readInput(int* dimention){
 
             //CHECK IF ALLOCATION IS SUCCESSFULL
             if (array == NULL){
-                raiseError("no se pudo allocar memoria para inputs");
-                error = true;
+                raiseError("no se pudo allocar memoria para inputs",error);
                 break;
             }
         }
@@ -74,34 +70,28 @@ double* readInput(int* dimention){
         }
     }
     //CHECK IF EMPTY INPUT
-    if (amountOfSuccesfullyReadInputs == 0 && !error){
-        raiseError("no se ingreso ningun valor");
-        error = true;
+    if (amountOfSuccesfullyReadInputs == 0 && !(*error)){
+        raiseError("no se ingreso ningun valor",error);
     }
     //CHECK IF AMOUNT OF INPUTS IS CORRECT
-    if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !error){
-        raiseError("no se respeto la cantidad de elementos prometidos");
+    if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !(*error)){
+        raiseError("no se respeto la cantidad de elementos prometidos",error);
         free(array);
-        error = true;
     }
-
-    printf("dimention: %d\n",*dimention);
-    printf("element %d: %f\n",0,array[0]);
-    printf("element %d: %f\n",1,array[1]);
-    printf("element %d: %f\n",2,array[2]);
-    printf("element %d: %f\n",3,array[3]);
-    printf("element %d: %f\n",4,array[4]);
-    printf("element %d: %f\n",5,array[5]);
-    printf("element %d: %f\n",6,array[6]);
-    printf("element %d: %f\n",7,array[7]);
-
     return array;
 }
 
 int main(int argc, const char* argv[]){
 
     int dimention;
-    readInput(&dimention);
+    bool error;
+    double* input = readInput(&dimention,&error);
+
+    int i;
+    for (i = 0;i<8;i++){
+        printf("elemento %d: %g\n",i,input[i]);
+    }
+    printf("\n%d\n",error);
 
     return 0;
 }

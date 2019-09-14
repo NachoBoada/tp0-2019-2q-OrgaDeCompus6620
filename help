@@ -8,3 +8,4 @@ Options:
 Examples:
     tp0 < in.txt > out.txt
     cat in.txt | tp0 > out.txt
+
