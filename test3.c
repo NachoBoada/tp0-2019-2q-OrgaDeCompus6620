@@ -3,8 +3,21 @@
 
 int main(int argc, const char* argv[]){
 
-    double a[10];
-    printf("%d\n",a);
-    printf("%d\n",&a[0]);
-    printf("%d\n",&a[1]);
+    int row;
+    int column;
+    int i;
+    int j;
+
+    for (i = 0; i < dimention; i++){
+
+        row = (int)(i / dimention);
+        column = (int)(i % dimention);
+
+        element = 0
+        for (j = 0; j < dimention; j++){
+
+            element += matrix_a->array[row*dimention + j] * matrix_b->array[j*dimention + column];
+        }
+        matrix_c->array[i] = element
+    }
 }

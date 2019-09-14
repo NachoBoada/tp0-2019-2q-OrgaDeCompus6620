@@ -1,73 +1,119 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include<stdbool.h>
 #include "Tp0.h"
 
 typedef struct matrix {
     size_t rows;
     size_t cols;
     double* array;
-}matrix_t; // ACA SE AGREGO EL ALIAS y el typedef
+}matrix_t;
 
-int error(){ //COMENTARIO PARA NOSOTROS: Esta funcion deberia ejecutarse siempre que haya un error y debeira hacer lo que haya que hacer ante el y luego cortar el programa
-             // si hay estructuras de datos con memoria ya almacenada primero deberan liberarse y despues cortar el programa
-
-             //QUE RECIBA SRINTG Y NUM
-
-    return 0;
+void raiseError(const char* s){
+    fprintf(stderr,"\n");
+    fprintf(stderr,"=======================\n");
+    fprintf(stderr,"ERROR MESSAGE: %s\n",s);
+    fprintf(stderr,"=======================\n");
 }
 
-size_t readMatrixDimention()
-{
-    char string[20];//TODO -- NO SE COMO RESOLVER ESTO PARA QUE SEA GENERICO
-    scanf("%s",string);
+double* readInput(int* dimention){
 
-    long result = 0;
-    if (strlen(string)>10){
-        //ERROR - BIGGER THAN INT
-        //error();
-        exit(1);//TODO -- SE QUITA Y QURDA ERROR SOLO
-    }
-    for (int i = 0; i < strlen(string); i++)
-    {
-        if (((int)string[i]< 48) || ((int)string[i]>57))
-        {
-            //ERROR - NOT A NUMBER
-            //error();
-            exit(2);//TODO -- SE QUITA Y QURDA ERROR SOLO
+    float x;
+    double y;
+    double* array;
+    int elementIndex;
+    int returnValue;
+
+    bool error = false;
+
+    int amountOfSuccesfullyReadInputs = 0;
+    bool endOfLine = false;
+    while (!endOfLine){
+        //READ
+        returnValue = fscanf(stdin,"%g", &x);
+
+        //CHECK IF END OF LINE
+        if (returnValue == -1){
+            endOfLine = true;
+            break;
         }
-        else
-        {
-            //LONG NUMBER
-            result = (result*10) + (string[i] - 48);
+
+        //CHECK IF INPUT IS NUMERIC
+        if (returnValue != 1){
+            raiseError("Input no numerico");
+
+            if (array != NULL){
+                free(array);
+            }
+            error = true;
+            break;
+        }
+
+        amountOfSuccesfullyReadInputs++;
+
+        //ALLOCATE MEMORY FOR MATRICES INPUT ELEMENTS
+        if (amountOfSuccesfullyReadInputs == 1){
+
+            //CHECK IF INPUT IS TYPE UINT
+            float mantiza = x - (int)x;
+            if (mantiza > 0 || (x <= 0)){
+                raiseError("La dimension no es entera positiva");
+                error = true;
+                break;
+            }
+
+            (*dimention) = (int)x;
+            array = malloc(sizeof(double)*(*dimention)*(*dimention)*2);
+
+            //CHECK IF ALLOCATION IS SUCCESSFULL
+            if (array == NULL){
+                raiseError("no se pudo allocar memoria para inputs");
+                error = true;
+                break;
+            }
+        }
+
+        //ADD ELEMENT TO ARRAY
+        else{
+            y = (double)x;
+            elementIndex = amountOfSuccesfullyReadInputs - 2;
+            array[elementIndex] = y;
         }
     }
-    if (result>4294967295) //UPPER LIMIT
-    {
-        //ERROR - OVERFLOW
-        //error();
-        exit(3);//TODO -- SE QUITA Y QURDA ERROR SOLO
+    //CHECK IF EMPTY INPUT
+    if (amountOfSuccesfullyReadInputs == 0 && !error){
+        raiseError("no se ingreso ningun valor");
+        error = true;
     }
-    else return (size_t) (result);
+    //CHECK IF AMOUNT OF INPUTS IS CORRECT
+    if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !error){
+        raiseError("no se respeto la cantidad de elementos prometidos");
+        free(array);
+        error = true;
+    }
+    return array;
 }
 
-void outputFile(char fileName[]){
+void outputFile(FILE* out, char fileName[]){
     //ADAPTS FILE NAME
     char s[100];
     strcat(s, "./");
     strcat(s, fileName);
 
     //TRIES TO OPEN FILE
-    FILE *fp;
+    FILE* fp;
     fp = fopen(s,"r");
-    if(fp == NULL){error();}
+    if(fp == NULL){
+        raiseError("no se pudo abrir archivo de salida");
+    }
 
     //OUTPUTS
     char c;
 	do
     {
         c = getc(fp);
-		printf("%c",c);
+		fprintf(out,"%c",c);
 	}
 	while(c != EOF);
 }
@@ -75,12 +121,12 @@ void outputFile(char fileName[]){
 matrix_t* create_matrix(size_t rows, size_t cols){
     matrix_t *matriz = malloc(sizeof(matrix_t));
     if (matriz == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        error("MatrizNull");
+        raiseError("no se pudo allocar memoria para matriz");
     }
     matriz->array = malloc(sizeof(size_t) * cols * rows); //representara los elementos de la matriz dispuestos en row-major order
     if (matriz->array == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
         free(matriz);
-        error("no hay memoria suficiente para crear la matriz");
+        raiseError("no se pudo allocar memoria para elementos de matriz");
     }
     matriz->rows = rows;
     matriz->cols = cols;
@@ -92,109 +138,88 @@ void destroy_matrix(matrix_t* m){
     free(m);
 }
 
-void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention){ /****Hay que agregar un EOF para leer cuando hay mas de una linea***/
-    char *read;
-    read = malloc(sizeof(char) * dimention * dimention * 2 * 26); // According to IEEE 754-1985, the longest notation for value represented by double type, i.e.: -2.2250738585072020E-308 has 24 chars.
+void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double* input){
 
-    if (read == NULL){
-        ////error("no hay memoria);
+    int i;
+
+    for (i = 0; i < dimention*dimention; i++){
+        matrix_a->array[i] = input[i];
     }
 
-    scanf("%[^\n]s",read); //Guarda todos los digitos. Sin el [^\n] se corta en cada espacio.
-    if (read == NULL){
-        ////error("no se guaro lo leido del stdin");
+    for (i = dimention*dimention; i < dimention*dimention*2; i++){
+        matrix_b->array[i] = input[i];
     }
-    printf( "read %s\n", read );
-
-    char *separator;
-    separator = strtok(read, "' '");
-    separator = strtok(NULL, "' '"); //hay que saltar al primer elemento que N
-    double element;
-    int elementsQuantity = 0, posInMatrixA = 0, posInMatrixB = 0;
-    while( separator != NULL ) {
-        element = atof(separator);
-        if (elementsQuantity < (2 * dimention)){ //dimention * 2 cantidad de elements van a la matriz a, y el resto a la matriz b;
-            matrix_a->array[posInMatrixA] = element;
-            posInMatrixA++;
-        } else {
-            matrix_b->array[posInMatrixB] = element;
-            posInMatrixB++;
-        }
-        separator = strtok(NULL, "' '");
-   }
 }
 
 matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
 
-
-char* readInput(){
-
-    int a;
-    int b;
-
-    scanf("%d", &a)
-
-    scanf("%f", &b)
+void print_matrix(FILE* fp, matrix_t* matrix_m){
 
 }
-    size_t dim = matrix_a->cols; //ES LO MISMO AL SER MATRICES CUADRADAS
-    size_t row=0; //CONTROLA LAS FILAS DE LA MATRIZ A PARA MULTIPLICAR
-    size_t column=0; //CONTROLA LAS COLUMNAS DE LA MATRIZ B PARA MULTIPLICAR
-    size_t i=0; //CONTADOR PARA REALIZAR TODAS LAS OPERACIONES
-    double elem=0; // ACUMULADOR DE RESULTADO PARCIAL
-    matrix_t* matriz_c = create_matrix(dim,dim); //CREO LA MATRIZ QUE VOY A DEVOLVER
-    do{
-        elem=0;
-        for (size_t j=0;j<dim;j++){
-            elem+= matrix_a->array[row*dim +j] * matrix_b->array[j*dim +column]; //MULTIPLICO ELEMENTO A ELEMENTO
-        }
-        column++; // UNA VEZ QUE OBTENGO UN NUMERO PASO A AL SIGUIENTE
-        matriz_c->array[i]=elem; // GUARDO EL ELEMENTO CALCULADO
-        if ((column % dim)==0){ //SI YA HICE UN MULTIPLO DE DIM DE OPERACIONES PASO A LA SIGUIENTE FILA
-            column=0; //REINICIO EL CONTADOR DE COLUMNAS
-            row++; //PASO A LA SIGUIENTE FILA
-        }
-        i++; //INCREMENTO LA CANTIDAD DE ELEMENTOS CALCULADOS
-    }while (i< (dim*dim));
-    return matriz_c;
-};
 
-int main(int argc, const char* argv[])
-{
+    int dimention = matrix_a->rows;
+
+    matrix_t* matrix_c = create_matrix(dimention,dimention);
+
+    int row;
+    int column;
+    int i;
+    int j;
+    int element;
+
+    for (i = 0; i < dimention; i++){
+
+        row = (int)(i / dimention);
+        column = (int)(i % dimention);
+
+        element = 0;
+        for (j = 0; j < dimention; j++){
+
+            element += matrix_a->array[row*dimention + j] * matrix_b->array[j*dimention + column];
+        }
+        matrix_c->array[i] = element;
+    }
+    return matrix_c;
+}
+
+int main(int argc, const char* argv[]){
+
+    //INITIALIZATION
+    FILE* OUT = stdout;
+
     //HANDELING COMANDS
     int a = 1; //COMENTARIO PARA NOSOTROS: Por alguna razon si no pongo a y pongo 1 en vez no anda
 
     if (strcmp(argv[a],"-h") == 0 || strcmp(argv[a],"--help") == 0){
         char fileName[] = "help";
-        outputFile(fileName);
+        outputFile(OUT,fileName);
     }
 
     if (strcmp(argv[a],"-V") == 0 || strcmp(argv[a],"--version") == 0){
         char fileName[] = "version";
-        outputFile(fileName);
+        outputFile(OUT,fileName);
     }
 
-
     //MAIN PROGRAM
+    bool error = false; //VER COMO  CORTAR LA EJECUCION DE FORMA ELEGANTE
     bool thereAreMoreProductsToDo = true;
     while (thereAreMoreProductsToDo){
 
-        int *dimention;
-        char* entireInput = readInput(dimention);
+        int dimention;
+        double* input = readInput(&dimention);
 
-        matrix_t* matrix_a = create_matrix(dimention,dimention); //tiene que poder leer una linea
+        matrix_t* matrix_a = create_matrix(dimention,dimention);
         matrix_t* matrix_b = create_matrix(dimention,dimention);
 
-        fillUpMatrices(matrix_a,matrix_b, dimention,entireInput);
+        fillUpMatrices(matrix_a,matrix_b, dimention,input);
 
         matrix_t* matrix_c = matrix_multiply(matrix_a,matrix_b);
 
-        print_matrix(fp,matrix_c);
+        print_matrix(OUT,matrix_c);
 
         destroy_matrix(matrix_a);
         destroy_matrix(matrix_b);
         destroy_matrix(matrix_c);
     }
-
     return 0;
 }

@@ -3,12 +3,13 @@
 
 ToDo:
     Probar que el programa corre correctamente en NetBSD/pmax(usando el simulador GXemul [1]) y Linux. (Portabilidad).
+    Crear varios test (matrices grandes y chicas) y testearlo
     
     
 Doing:
 
     Axel - Agregar funcionalidad para leer más de una línea por stdin (leer hsata la señal de EOF).
-    Axel - print_matrix
+    Axel - print_matrix (que haga output por stdout)
     Axel - Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
 
 Done:

@@ -1,8 +1,10 @@
 errores posibles:
 
-que la dimension no sea un int
+que la dimension no sea un uint# (permitimos que sea un float de mantiza cero)
 
-que no ingrese la dimension
+que algun elemento no sea numerico#
+
+que no ingrese la dimension#
 
 que no respete la cantidad de elementos prometidos por la dimension#
 
