@@ -1,0 +1,23 @@
+*Idea propuesta por Axel en whatsapp, la dejo acá para que no se pierda*
+Diseñar pruebas para hacer que sean bien de casos borde y otras que sean mas o menos normales. La idea seria:
+
+todos los casos bordes usando matrices chicas
+todos los casos bordes usando matrices grandes
+casos normales usando matrices chicas
+casos normales usando matrices grandes
+
+Casos borde podrian ser:
+
+que algun elemento no sea numerico
+que la dimension no sea int
+que la dimension sea float
+que la dimension sea 0
+que la dimension sea negativa
+que la cantidad de elementos dados no cierre con la dimension
+que hayan varias lineas
+que hayan dos lineas con distinta dimension
+que hayan dos lineas donde la primera tiene error y la segunda no
+que hayan dos lineas donde la segunda tiene error y la primera no
+probar con 3 lineas
+probar cuentas basicas entre matrices como producto por indentidad o producto por matriz nula
+tambien probar por producto por inversa
