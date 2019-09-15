@@ -3,7 +3,6 @@
 
 ToDo:
     Probar que el programa corre correctamente en NetBSD/pmax(usando el simulador GXemul [1]) y Linux. (Portabilidad).
-    Generar Pruebas (leer ParaHacerPruebas.txt).
     Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
     
 Doing:
@@ -11,6 +10,7 @@ Doing:
     Axel - Agregar funcionalidad para leer más de una línea por stdin (leer hsata la señal de EOF).
 
     Axel - Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
+    Nacho-Generar Pruebas (leer ParaHacerPruebas.txt).
 
 Done:
     Nacho-Creacion del Repo
