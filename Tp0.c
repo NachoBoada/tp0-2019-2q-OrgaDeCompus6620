@@ -10,23 +10,23 @@ typedef struct matrix {
     double* array;
 }matrix_t;
 
-void raiseError(const char* s, bool *error){
+void raiseError(const char* s){
     fprintf(stderr,"\n");
     fprintf(stderr,"=======================\n");
     fprintf(stderr,"ERROR MESSAGE: %s\n",s);
     fprintf(stderr,"=======================\n");
     fprintf(stderr,"\n");
-
-    *error = true;
+    exit (EXIT_FAILURE);
 }
 
-double* readInput(int* dimention, bool *error, bool* thereAreMoreProductsToDo){
+double* readInput(int* dimention, bool* thereAreMoreProductsToDo){
 
     float x;
     double y;
     double* array;
     int elementIndex;
     int returnValue;
+    bool error = false;
 
     int amountOfSuccesfullyReadInputs = 0;
     bool endOfLine = false;
@@ -39,20 +39,23 @@ double* readInput(int* dimention, bool *error, bool* thereAreMoreProductsToDo){
             endOfLine = true;
 
             //CHECK IF EMPTY INPUT
-            if (amountOfSuccesfullyReadInputs == 0 && !(*error)){
-                raiseError("no se ingreso ningun valor",error);
+            if (amountOfSuccesfullyReadInputs == 0 && !error){
+                raiseError("no se ingreso ningun valor");
+                error = true;
             }
 
             //CHECK IF AMOUNT OF INPUTS IS CORRECT
-            if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !(*error)){
-                raiseError("no se respeto la cantidad de elementos prometidos",error);
+            if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !error){
+                raiseError("no se respeto la cantidad de elementos prometidos");
+                error = true;
             }
             break;
         }
 
         //CHECK IF INPUT IS NUMERIC
         if (returnValue != 1){
-            raiseError("Input no numerico",error);
+            raiseError("Input no numerico");
+            error = true;
             break;
         }
 
@@ -64,7 +67,8 @@ double* readInput(int* dimention, bool *error, bool* thereAreMoreProductsToDo){
             //CHECK IF INPUT IS TYPE UINT
             float mantiza = x - (int)x;
             if (mantiza > 0 || (x <= 0)){
-                raiseError("La dimension no es entera positiva",error);
+                raiseError("La dimension no es entera positiva");
+                error = true;
                 break;
             }
 
@@ -73,7 +77,8 @@ double* readInput(int* dimention, bool *error, bool* thereAreMoreProductsToDo){
 
             //CHECK IF ALLOCATION IS SUCCESSFULL
             if (array == NULL){
-                raiseError("no se pudo allocar memoria para inputs",error);
+                raiseError("no se pudo allocar memoria para inputs");
+                error = true;
                 break;
             }
         }
@@ -99,7 +104,7 @@ void outputFile(FILE* out, char fileName[]){
     FILE* fp;
     fp = fopen(s,"r");
     if(fp == NULL){
-        raiseError("no se pudo abrir archivo de salida",&error);
+        raiseError("no se pudo abrir archivo de salida");
     }
 
     //OUTPUTS
@@ -113,11 +118,11 @@ void outputFile(FILE* out, char fileName[]){
 matrix_t* create_matrix(size_t rows, size_t cols){
     matrix_t *matriz = malloc(sizeof(matrix_t));
     if (matriz == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        raiseError("no se pudo allocar memoria para matriz",&error);
+        raiseError("no se pudo allocar memoria para matriz");
     }
     matriz->array = malloc(sizeof(double) * cols * rows); //representara los elementos de la matriz dispuestos en row-major order
     if (matriz->array == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        raiseError("no se pudo allocar memoria para elementos de matriz",&error);
+        raiseError("no se pudo allocar memoria para elementos de matriz");
         free(matriz);
     }
     matriz->rows = rows;
@@ -157,7 +162,7 @@ matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
     int j;
     int element;
 
-    for (i = 0; i < dimention; i++){
+    for (i = 0; i < dimention*dimention; i++){
 
         row = (int)(i / dimention);
         column = (int)(i % dimention);
@@ -209,8 +214,14 @@ int main(int argc, const char* argv[]){
         }
     }
 
+    void printArray(double a[],int len){
+        int i;
+        for (i = 0; i < len; i++){
+            printf("element: %g\n",a[i]);
+        }
+    }
+
     //MAIN PROGRAM
-    bool error = false;
     bool thereAreMoreProductsToDo = true;
     while (thereAreMoreProductsToDo && !endProgram){
 
@@ -219,32 +230,26 @@ int main(int argc, const char* argv[]){
         matrix_t* matrix_c;
 
         int dimention;
-        double* input = readInput(&dimention,&error,&thereAreMoreProductsToDo);
-
-        if (!error){
-            matrix_a = create_matrix(dimention,dimention);
-        }
-
-        if (!error){
-            matrix_b = create_matrix(dimention,dimention);
-        }
-
-        if (!error){
-            fillUpMatrices(matrix_a,matrix_b, dimention,input);
-            matrix_c = matrix_multiply(matrix_a,matrix_b);
-        }
-
-        if (!error){
-            //print_matrix(OUT,matrix_c,&error);
-        }
-
-        if (error){
-            endProgram = true;
-        }
+        double* input = readInput(&dimention,&thereAreMoreProductsToDo);
+        printArray(input,dimention*dimention*2);
+        printf("readInput: \n");
+        matrix_a = create_matrix(dimention,dimention);
+        printf("matrix_a = create_matrix: \n");
+        matrix_b = create_matrix(dimention,dimention);
+        printf("matrix_b = create_matrix: \n");
+        fillUpMatrices(matrix_a,matrix_b, dimention,input);
+        printf("fillUpMatrices: \n");
+        matrix_c = matrix_multiply(matrix_a,matrix_b);
+        printf("matrix_multiply: \n");
+        //print_matrix(OUT,matrix_c,&error);
+        printArray(matrix_c->array,dimention*dimention);
 
         destroy_matrix(matrix_a);
+        printf("destroy_matrix(matrix_a): \n");
         destroy_matrix(matrix_b);
+        printf("destroy_matrix(matrix_b): \n");
         destroy_matrix(matrix_c);
+        printf("destroy_matrix(matrix_c): \n");
         /*
         if (input != NULL){
             free(input);
