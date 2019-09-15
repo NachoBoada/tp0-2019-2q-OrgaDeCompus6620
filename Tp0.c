@@ -20,7 +20,7 @@ void raiseError(const char* s, bool *error){
     *error = true;
 }
 
-double* readInput(int* dimention, bool *error){
+double* readInput(int* dimention, bool *error, bool* thereAreMoreProductsToDo){
 
     float x;
     double y;
@@ -37,16 +37,22 @@ double* readInput(int* dimention, bool *error){
         //CHECK IF END OF LINE
         if (returnValue == -1){
             endOfLine = true;
+
+            //CHECK IF EMPTY INPUT
+            if (amountOfSuccesfullyReadInputs == 0 && !(*error)){
+                raiseError("no se ingreso ningun valor",error);
+            }
+
+            //CHECK IF AMOUNT OF INPUTS IS CORRECT
+            if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !(*error)){
+                raiseError("no se respeto la cantidad de elementos prometidos",error);
+            }
             break;
         }
 
         //CHECK IF INPUT IS NUMERIC
         if (returnValue != 1){
             raiseError("Input no numerico",error);
-
-            if (array != NULL){
-                free(array);
-            }
             break;
         }
 
@@ -79,15 +85,6 @@ double* readInput(int* dimention, bool *error){
             array[elementIndex] = y;
         }
     }
-    //CHECK IF EMPTY INPUT
-    if (amountOfSuccesfullyReadInputs == 0 && !(*error)){
-        raiseError("no se ingreso ningun valor",error);
-    }
-    //CHECK IF AMOUNT OF INPUTS IS CORRECT
-    if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !(*error)){
-        raiseError("no se respeto la cantidad de elementos prometidos",error);
-        free(array);
-    }
     return array;
 }
 
@@ -102,7 +99,7 @@ void outputFile(FILE* out, char fileName[]){
     FILE* fp;
     fp = fopen(s,"r");
     if(fp == NULL){
-        raiseError("no se pudo abrir archivo de salida",&r);
+        raiseError("no se pudo abrir archivo de salida",&error);
     }
 
     //OUTPUTS
@@ -113,14 +110,14 @@ void outputFile(FILE* out, char fileName[]){
 	}
 }
 
-matrix_t* create_matrix(size_t rows, size_t cols, bool *error){
+matrix_t* create_matrix(size_t rows, size_t cols){
     matrix_t *matriz = malloc(sizeof(matrix_t));
     if (matriz == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        raiseError("no se pudo allocar memoria para matriz",error);
+        raiseError("no se pudo allocar memoria para matriz",&error);
     }
     matriz->array = malloc(sizeof(double) * cols * rows); //representara los elementos de la matriz dispuestos en row-major order
     if (matriz->array == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        raiseError("no se pudo allocar memoria para elementos de matriz",error);
+        raiseError("no se pudo allocar memoria para elementos de matriz",&error);
         free(matriz);
     }
     matriz->rows = rows;
@@ -129,17 +126,18 @@ matrix_t* create_matrix(size_t rows, size_t cols, bool *error){
 }
 
 void destroy_matrix(matrix_t* m){
-    free(m->array);
-    free(m);
+
+    if (m != NULL){
+        free(m->array);
+        free(m);
+    }
 }
 
 void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double* input){
 
     int i;
-
     for (i = 0; i < dimention*dimention; i++){
-        printf("\naca bien: %g\n",input[i]);
-        *(matrix_a->array + i) = input[i];
+        matrix_a->array[i] = input[i];
     }
 
     for (i = dimention*dimention; i < dimention*dimention*2; i++){
@@ -147,11 +145,11 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double
     }
 }
 
-matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b, bool* error){
+matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
 
     int dimention = matrix_a->rows;
 
-    matrix_t* matrix_c = create_matrix(dimention,dimention,error);
+    matrix_t* matrix_c = create_matrix(dimention,dimention);
 
     int row;
     int column;
@@ -174,13 +172,13 @@ matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b, bool* error){
     return matrix_c;
 }
 
-void print_matrix(FILE* out, matrix_t* matrix_m, bool* error){
+void print_matrix(FILE* out, matrix_t* matrix_m){
 
     int dimention = matrix_m->rows;
     double x;
     int i;
 
-    fprintf(out,"%g",x);
+    fprintf(out,"%d",dimention);
     fprintf(out,"%c",' ');
 
 	for (i = 0; i < dimention; i++){
@@ -221,30 +219,23 @@ int main(int argc, const char* argv[]){
         matrix_t* matrix_c;
 
         int dimention;
-        double* input = readInput(&dimention,&error);
+        double* input = readInput(&dimention,&error,&thereAreMoreProductsToDo);
 
         if (!error){
-            matrix_t* matrix_a = create_matrix(dimention,dimention,&error);
+            matrix_a = create_matrix(dimention,dimention);
         }
 
         if (!error){
-            matrix_t* matrix_b = create_matrix(dimention,dimention,&error);
+            matrix_b = create_matrix(dimention,dimention);
         }
 
         if (!error){
             fillUpMatrices(matrix_a,matrix_b, dimention,input);
-            matrix_t* matrix_c = matrix_multiply(matrix_a,matrix_b,&error);
+            matrix_c = matrix_multiply(matrix_a,matrix_b);
         }
-        printf("\nalala\n");
-        /*
-        int i;
-        for (i = 0;i<4;i++){
-            printf("elemento %d: %g\n",i,matrix_a->array[i]);
-        }
-        printf("\n%d\n",error);*/
 
         if (!error){
-            print_matrix(OUT,matrix_c,&error);
+            //print_matrix(OUT,matrix_c,&error);
         }
 
         if (error){
@@ -254,7 +245,10 @@ int main(int argc, const char* argv[]){
         destroy_matrix(matrix_a);
         destroy_matrix(matrix_b);
         destroy_matrix(matrix_c);
-        free(input);
+        /*
+        if (input != NULL){
+            free(input);
+        }*/
     }
     return 0;
 }

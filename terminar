@@ -2,5 +2,7 @@ que despues de ingresar -h o -V corte el programa#
 
 poner bien el mensaje de Version
 
-que despues de un error corte el programa
+que despues de un error corte el programa#
+
+la interfaz no admite pasaje de errores
 
