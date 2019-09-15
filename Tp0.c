@@ -186,11 +186,12 @@ void print_matrix(FILE* out, matrix_t* matrix_m){
     fprintf(out,"%d",dimention);
     fprintf(out,"%c",' ');
 
-	for (i = 0; i < dimention; i++){
+	for (i = 0; i < dimention*dimention; i++){
         x = matrix_m->array[i];
 		fprintf(out,"%g",x);
         fprintf(out,"%c",' ');
 	}
+    fprintf(out,"\n");
 }
 
 int main(int argc, const char* argv[]){
@@ -231,25 +232,25 @@ int main(int argc, const char* argv[]){
 
         int dimention;
         double* input = readInput(&dimention,&thereAreMoreProductsToDo);
-        printArray(input,dimention*dimention*2);
-        printf("readInput: \n");
+        //printArray(input,dimention*dimention*2);
+        //printf("readInput: \n");
         matrix_a = create_matrix(dimention,dimention);
-        printf("matrix_a = create_matrix: \n");
+        //printf("matrix_a = create_matrix: \n");
         matrix_b = create_matrix(dimention,dimention);
-        printf("matrix_b = create_matrix: \n");
+        //printf("matrix_b = create_matrix: \n");
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
-        printf("fillUpMatrices: \n");
+        //printf("fillUpMatrices: \n");
         matrix_c = matrix_multiply(matrix_a,matrix_b);
-        printf("matrix_multiply: \n");
-        //print_matrix(OUT,matrix_c,&error);
-        printArray(matrix_c->array,dimention*dimention);
+        //printf("matrix_multiply: \n");
+        print_matrix(OUT,matrix_c);
+        //printArray(matrix_c->array,dimention*dimention);
 
         destroy_matrix(matrix_a);
-        printf("destroy_matrix(matrix_a): \n");
+        //printf("destroy_matrix(matrix_a): \n");
         destroy_matrix(matrix_b);
-        printf("destroy_matrix(matrix_b): \n");
+        //printf("destroy_matrix(matrix_b): \n");
         destroy_matrix(matrix_c);
-        printf("destroy_matrix(matrix_c): \n");
+        //printf("destroy_matrix(matrix_c): \n");
         /*
         if (input != NULL){
             free(input);
