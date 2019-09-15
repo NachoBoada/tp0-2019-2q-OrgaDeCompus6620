@@ -1,12 +1,4 @@
-que despues de ingresar -h o -V corte el programa#
-
-poner bien el mensaje de Version
-
-que despues de un error corte el programa#
-
-la interfaz no admite pasaje de errores#
-
 ver si usando la funcion exit no terminas perdiendo memoria
-
+poner bien el mensaje de Version
 al poner el .h se rompe de forma rara y si no lo pongo anda bien
 

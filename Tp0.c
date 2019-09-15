@@ -11,6 +11,7 @@ typedef struct matrix {
 } matrix_t;
 
 void raiseError(const char* s){
+
     fprintf(stderr,"\n");
     fprintf(stderr,"=======================\n");
     fprintf(stderr,"ERROR MESSAGE: %s\n",s);
@@ -19,28 +20,38 @@ void raiseError(const char* s){
     exit (EXIT_FAILURE);
 }
 
-void readLine(int dimention,double* array){
+char *readLine(FILE* fp){
+//The size is extended by the input with the value of the provisional
+    int size = 10; //HARDCODED
+    char *str;
+    int ch;
+    size_t len = 0;
+    str = realloc(NULL, sizeof(char)*size);//size is start size
+    if(!str)return str;
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+        str[len++]=ch;
+        if(len==size){
+            str = realloc(str, sizeof(char)*(size+=16)); //HARDCODED
+            if(!str)return str;
+        }
+    }
+    str[len++]='\0';
+
+    return realloc(str, sizeof(char)*len);
+}
+
+void readElementsInLine(double* array){
+
+    char* line = readLine(stdin);
 
     float x;
-    double y;
-    int returnValue;
-    int amountOfSuccesfullyReadInputs = 0;
-    do{
-        if (amountOfSuccesfullyReadInputs > 0){
-            y = (double)x;
-            array[amountOfSuccesfullyReadInputs-1] = y;
-        }
-        returnValue = fscanf(stdin,"%g", &x);
-        printf("read: %g\n",x);
-        amountOfSuccesfullyReadInputs++;
-    }
-    while (returnValue != -1);
-    printf("finished\n");
-    amountOfSuccesfullyReadInputs--;
-    //CHECK IF AMOUNT OF INPUTS IS CORRECT
-    if (amountOfSuccesfullyReadInputs != dimention*dimention*2){
-        raiseError("no se respeto la cantidad de elementos prometidos");
-        free(array);
+    int offset;
+    int i = 0;
+    while (sscanf(line, " %g%n", &x, &offset) == 1)
+    {
+        line += offset;
+        array[i] = (double)x;
+        i++;
     }
 }
 
@@ -56,9 +67,8 @@ double* readInput(int* dimention){
 
     //CHECK IF END OF LINE
     if (returnValue == -1){
-        raiseError("no se ingreso ningun valor");
+        exit (0);
     }
-
     //CHECK IF INPUT IS NUMERIC
     if (returnValue != 1){
         raiseError("Input no numerico");
@@ -78,9 +88,9 @@ double* readInput(int* dimention){
     if (array == NULL){
         raiseError("no se pudo allocar memoria para inputs");
     }
-
     //READ WHOLE LINE
-    readLine((*dimention),array);
+    readElementsInLine(array);
+
     return array;
 }
 
@@ -122,7 +132,6 @@ matrix_t* create_matrix(size_t rows, size_t cols){
 }
 
 void destroy_matrix(matrix_t* m){
-
     if (m != NULL){
         free(m->array);
         free(m);
@@ -206,13 +215,6 @@ int main(int argc, const char* argv[]){
         }
     }
 
-    void printArray(double a[],int len){
-        int i;
-        for (i = 0; i < len; i++){
-            printf("element: %g\n",a[i]);
-        }
-    }
-
     //MAIN PROGRAM
     bool thereAreMoreProductsToDo = true;
     while (thereAreMoreProductsToDo && !endProgram){
@@ -223,29 +225,19 @@ int main(int argc, const char* argv[]){
 
         int dimention;
         double* input = readInput(&dimention);
-        //printArray(input,dimention*dimention*2);
-        //printf("readInput: \n");
         matrix_a = create_matrix(dimention,dimention);
-        //printf("matrix_a = create_matrix: \n");
         matrix_b = create_matrix(dimention,dimention);
-        //printf("matrix_b = create_matrix: \n");
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
-        //printf("fillUpMatrices: \n");
         matrix_c = matrix_multiply(matrix_a,matrix_b);
-        //printf("matrix_multiply: \n");
         print_matrix(OUT,matrix_c);
-        //printArray(matrix_c->array,dimention*dimention);
 
         destroy_matrix(matrix_a);
-        //printf("destroy_matrix(matrix_a): \n");
         destroy_matrix(matrix_b);
-        //printf("destroy_matrix(matrix_b): \n");
         destroy_matrix(matrix_c);
-        //printf("destroy_matrix(matrix_c): \n");
-        /*
+
         if (input != NULL){
             free(input);
-        }*/
+        }
     }
     return 0;
 }

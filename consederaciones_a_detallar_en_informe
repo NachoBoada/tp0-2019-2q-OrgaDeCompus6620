@@ -1,0 +1,3 @@
+No consideramos como error un archivo vacio pero si cortamos programa
+
+No consideramos como error una dimension float positivo no nulo pero con mantiza nula
