@@ -1,41 +1,35 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int main(int argc, const char* argv[]){
+char *inputString(FILE* fp, size_t size){
+//The size is extended by the input with the value of the provisional
+    char *str;
+    int ch;
+    size_t len = 0;
+    str = realloc(NULL, sizeof(char)*size);//size is start size
+    if(!str)return str;
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+        str[len++]=ch;
+        if(len==size){
+            str = realloc(str, sizeof(char)*(size+=16));
+            if(!str)return str;
+        }
+    }
+    str[len++]='\0';
 
-    int dimention = 2;
-    float x;
-    double y;
-    int returnValue;
-    int amountOfSuccesfullyReadInputs = 0;
+    return realloc(str, sizeof(char)*len);
+}
 
-    char *buffer;
-    double b[100];
-    size_t bufsize = dimention*dimention*2; //NO ES UN LIMITE FORZADO PORQUE LA FUNCION GETLINE PUEDE PEDIR MAS MEMORIA SI FUESE NECESARIO UNA MATRIZ MAS GRANDE
+int main(int argc, char *argv[])
+{
+	char *m=0;
 
-    buffer = malloc(bufsize * sizeof(char));
-
-    getline(&buffer,&bufsize,stdin);
-    printf("%s\n",buffer);
-    sscanf(buffer,"%f",b);
-    int i;
-    for (i=0;i<100;i++){
-        printf("elemento %d: %g\n",i,b[i]);
+	while ((m = inputString(stdin, 10)) && ((*m)!='\0') ){
+		printf("input string : ");
+		printf("%s\n", m);
     }
 
-
-
-
-    /*
-    do{
-
-        sscanf(s,"%g",&x);
-        printf("read: %s\n",s);
-        amountOfSuccesfullyReadInputs++;
-    }
-    while (returnValue != -1);
-    printf("finished\n");
-    */
+    free(m);
+    return 0;
 }
