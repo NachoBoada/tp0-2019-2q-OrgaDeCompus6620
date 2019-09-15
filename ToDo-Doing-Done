@@ -3,8 +3,8 @@
 
 ToDo:
     Probar que el programa corre correctamente en NetBSD/pmax(usando el simulador GXemul [1]) y Linux. (Portabilidad).
-    Crear varios test (matrices grandes y chicas) y testearlo
-    
+    Generar Pruebas (leer ParaHacerPruebas.txt).
+    Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
     
 Doing:
 
