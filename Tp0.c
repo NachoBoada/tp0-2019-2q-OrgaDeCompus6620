@@ -2,13 +2,13 @@
 #include<string.h>
 #include<stdlib.h>
 #include<stdbool.h>
-#include "Tp0.h"
+
 
 typedef struct matrix {
     size_t rows;
     size_t cols;
     double* array;
-}matrix_t;
+} matrix_t;
 
 void raiseError(const char* s){
     fprintf(stderr,"\n");
@@ -19,77 +19,68 @@ void raiseError(const char* s){
     exit (EXIT_FAILURE);
 }
 
-double* readInput(int* dimention, bool* thereAreMoreProductsToDo){
+void readLine(int dimention,double* array){
 
     float x;
     double y;
+    int returnValue;
+    int amountOfSuccesfullyReadInputs = 0;
+    do{
+        if (amountOfSuccesfullyReadInputs > 0){
+            y = (double)x;
+            array[amountOfSuccesfullyReadInputs-1] = y;
+        }
+        returnValue = fscanf(stdin,"%g", &x);
+        printf("read: %g\n",x);
+        amountOfSuccesfullyReadInputs++;
+    }
+    while (returnValue != -1);
+    printf("finished\n");
+    amountOfSuccesfullyReadInputs--;
+    //CHECK IF AMOUNT OF INPUTS IS CORRECT
+    if (amountOfSuccesfullyReadInputs != dimention*dimention*2){
+        raiseError("no se respeto la cantidad de elementos prometidos");
+        free(array);
+    }
+}
+
+double* readInput(int* dimention){
+
+    float firstInputElement;//initialized as double to check if corrupted input
     double* array;
     int elementIndex;
     int returnValue;
-    bool error = false;
 
-    int amountOfSuccesfullyReadInputs = 0;
-    bool endOfLine = false;
-    while (!endOfLine){
-        //READ
-        returnValue = fscanf(stdin,"%g", &x);
+    //READ FIRST
+    returnValue = fscanf(stdin,"%g", &firstInputElement);
 
-        //CHECK IF END OF LINE
-        if (returnValue == -1){
-            endOfLine = true;
-
-            //CHECK IF EMPTY INPUT
-            if (amountOfSuccesfullyReadInputs == 0 && !error){
-                raiseError("no se ingreso ningun valor");
-                error = true;
-            }
-
-            //CHECK IF AMOUNT OF INPUTS IS CORRECT
-            if (amountOfSuccesfullyReadInputs != (1 + (*dimention)*(*dimention)*2) && !error){
-                raiseError("no se respeto la cantidad de elementos prometidos");
-                error = true;
-            }
-            break;
-        }
-
-        //CHECK IF INPUT IS NUMERIC
-        if (returnValue != 1){
-            raiseError("Input no numerico");
-            error = true;
-            break;
-        }
-
-        amountOfSuccesfullyReadInputs++;
-
-        //ALLOCATE MEMORY FOR MATRICES INPUT ELEMENTS
-        if (amountOfSuccesfullyReadInputs == 1){
-
-            //CHECK IF INPUT IS TYPE UINT
-            float mantiza = x - (int)x;
-            if (mantiza > 0 || (x <= 0)){
-                raiseError("La dimension no es entera positiva");
-                error = true;
-                break;
-            }
-
-            (*dimention) = (int)x;
-            array = malloc(sizeof(double)*(*dimention)*(*dimention)*2);
-
-            //CHECK IF ALLOCATION IS SUCCESSFULL
-            if (array == NULL){
-                raiseError("no se pudo allocar memoria para inputs");
-                error = true;
-                break;
-            }
-        }
-
-        //ADD ELEMENT TO ARRAY
-        else{
-            y = (double)x;
-            elementIndex = amountOfSuccesfullyReadInputs - 2;
-            array[elementIndex] = y;
-        }
+    //CHECK IF END OF LINE
+    if (returnValue == -1){
+        raiseError("no se ingreso ningun valor");
     }
+
+    //CHECK IF INPUT IS NUMERIC
+    if (returnValue != 1){
+        raiseError("Input no numerico");
+    }
+
+    //CHECK IF INPUT IS TYPE UINT
+    float mantiza = firstInputElement - (int)firstInputElement;
+    if (mantiza > 0 || (firstInputElement <= 0)){
+        raiseError("La dimension no es entera positiva");
+    }
+
+    //ALLOCATE MEMORY FOR MATRICES INPUT ELEMENTS
+    (*dimention) = (int)firstInputElement;
+    array = malloc(sizeof(double)*(*dimention)*(*dimention)*2);
+
+    //CHECK IF ALLOCATION IS SUCCESSFULL
+    if (array == NULL){
+        raiseError("no se pudo allocar memoria para inputs");
+    }
+
+    //READ WHOLE LINE
+    readLine((*dimention),array);
     return array;
 }
 
@@ -231,7 +222,7 @@ int main(int argc, const char* argv[]){
         matrix_t* matrix_c;
 
         int dimention;
-        double* input = readInput(&dimention,&thereAreMoreProductsToDo);
+        double* input = readInput(&dimention);
         //printArray(input,dimention*dimention*2);
         //printf("readInput: \n");
         matrix_a = create_matrix(dimention,dimention);

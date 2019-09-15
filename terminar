@@ -8,3 +8,5 @@ la interfaz no admite pasaje de errores#
 
 ver si usando la funcion exit no terminas perdiendo memoria
 
+al poner el .h se rompe de forma rara y si no lo pongo anda bien
+

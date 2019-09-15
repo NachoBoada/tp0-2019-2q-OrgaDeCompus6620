@@ -9,7 +9,7 @@ ToDo:
 Doing:
 
     Axel - Agregar funcionalidad para leer más de una línea por stdin (leer hsata la señal de EOF).
-    Axel - print_matrix (que haga output por stdout)
+
     Axel - Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
 
 Done:
@@ -28,4 +28,5 @@ Done:
     Mauro - matrix_multiply
 
     Axel - error (Ante un error, el progama deber ́a informar la situaci ́on inmediatamente (porstderr) ydetener su ejecución).
+    Axel - print_matrix (que haga output por stdout)
     
