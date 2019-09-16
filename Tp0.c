@@ -189,7 +189,7 @@ matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
     int column;
     int i;
     int j;
-    int element;
+    double element;
 
     for (i = 0; i < dimention*dimention; i++){
 
