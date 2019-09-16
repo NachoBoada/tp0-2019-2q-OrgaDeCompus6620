@@ -47,7 +47,7 @@ char *readLine(FILE* fp){
     return realloc(str, sizeof(char)*len);
 }
 
-void readElementsInLine(double* array){
+void readElementsInLine(int dimention, double* array){
 
     char* line = readLine(stdin);
 
@@ -55,6 +55,7 @@ void readElementsInLine(double* array){
     int offset;
     int i = 0;
     int returnValue;
+    int cantidadDeElementosLeidos;
 
     while (true)
     {
@@ -68,6 +69,10 @@ void readElementsInLine(double* array){
         }
 
         if (returnValue == -1){
+            cantidadDeElementosLeidos = i;
+            if(cantidadDeElementosLeidos != dimention*dimention*2){
+                raiseError("No coincide dimension con cantidad de elementos ingresados");
+            }
             break;
         }
 
@@ -95,7 +100,7 @@ double* readInput(int* dimention){
     }
     //CHECK IF INPUT IS NUMERIC
     if (returnValue != 1){
-        raiseError("Input no numerico");
+        raiseError("Dimension no numerica");
     }
 
     //CHECK IF INPUT IS TYPE UINT
@@ -110,10 +115,10 @@ double* readInput(int* dimention){
 
     //CHECK IF ALLOCATION IS SUCCESSFULL
     if (array == NULL){
-        raiseError("no se pudo allocar memoria para inputs");
+        raiseError("No se pudo allocar memoria para inputs");
     }
     //READ WHOLE LINE
-    readElementsInLine(array);
+    readElementsInLine((*dimention), array);
 
     return array;
 }
@@ -253,7 +258,7 @@ int main(int argc, const char* argv[]){
         matrix_b = create_matrix(dimention,dimention);
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
 
-        printArray(dimention*dimention,matrix_a->array);
+        //printArray(dimention*dimention,matrix_a->array);
         //printArray(dimention*dimention,matrix_b->array);
 
         matrix_c = matrix_multiply(matrix_a,matrix_b);

@@ -6,6 +6,46 @@ TIPO DE PRUEBAS:
 Diseñar pruebas para hacer que sean bien de casos borde y otras que sean mas o menos normales. La idea seria:
 
 ToDo:
+    
+Doing:
+    -todos los casos bordes usando matrices chicas:
+
+		
+	-todos los casos bordes usando matrices grandes:
+		
+Done:
+    -todos los casos bordes usando matrices chicas:
+          //DONE  que algun elemento no sea numerico
+          //done  que la dimension no sea int
+          //done  que la dimension sea float
+          //done  que la dimension sea 0
+          //done  que la dimension sea negativa
+          //done  que la cantidad de elementos dados no cierre con la dimension
+          //done  que hayan varias lineas
+          //done  (dentro de varias lineas) que hayan dos lineas con distinta dimension
+          //done  que hayan dos lineas donde la primera tiene error y la segunda no
+          //done  que hayan dos lineas donde la segunda tiene error y la primera no
+          //done  (dentro de muchas lineas) probar con 3 lineas
+          //done probar cuentas basicas entre matrices como producto por indentidad o producto por matriz nula
+           //done  probar por producto por inversa
+    
+	-todos los casos bordes usando matrices grandes:
+        //done  que algun elemento no sea numerico
+        //done  que la dimension no sea int
+        //done  que la dimension sea float
+        //done  que la dimension sea 0
+        //done  que la dimension sea negativa
+        //done  que la cantidad de elementos dados no cierre con la dimension
+        //done  que hayan varias lineas
+        //done  (en varias lineas) que hayan dos lineas con distinta dimension
+        //done  que hayan dos lineas donde la primera tiene error y la segunda no
+        //done  que hayan dos lineas donde la segunda tiene error y la primera no
+        //done  (dentro de muchas lineas) probar con 3 lineas
+        //done  probar cuentas basicas entre matrices como producto por indentidad o producto por matriz nula
+		//done  probar por producto por inversa
+        
+
+<<DONE
     casos normales usando matrices chicas
     casos normales usando matrices grandes
 
@@ -23,45 +63,7 @@ ToDo:
         probar con 3 lineas
         probar cuentas basicas entre matrices como producto por indentidad o producto por matriz nula
         tambien probar por producto por inversa
-    
-Doing:
-    -todos los casos bordes usando matrices chicas:
-		?? tambien probar por producto por inversa
-		
-	-todos los casos bordes usando matrices grandes:
-		?? tambien probar por producto por inversa
-		
-    
-
-Done:
-    -todos los casos bordes usando matrices chicas:
-          //DONE  que algun elemento no sea numerico
-          //done  que la dimension no sea int
-          //done  que la dimension sea float
-          //done  que la dimension sea 0
-          //done  que la dimension sea negativa
-          //done  que la cantidad de elementos dados no cierre con la dimension
-          //done  que hayan varias lineas
-          //done  (dentro de varias lineas) que hayan dos lineas con distinta dimension
-          //done  que hayan dos lineas donde la primera tiene error y la segunda no
-          //done  que hayan dos lineas donde la segunda tiene error y la primera no
-          //done  (dentro de muchas lineas) probar con 3 lineas
-          //done probar cuentas basicas entre matrices como producto por indentidad o producto por matriz nula
-    
-	-todos los casos bordes usando matrices grandes:
-        //done  que algun elemento no sea numerico
-        //done  que la dimension no sea int
-        //done  que la dimension sea float
-        //done  que la dimension sea 0
-        //done  que la dimension sea negativa
-        //done  que la cantidad de elementos dados no cierre con la dimension
-        //done  que hayan varias lineas
-        //done  (en varias lineas) que hayan dos lineas con distinta dimension
-        //done  que hayan dos lineas donde la primera tiene error y la segunda no
-        //done  que hayan dos lineas donde la segunda tiene error y la primera no
-        //done  (dentro de muchas lineas) probar con 3 lineas
-        //done  probar cuentas basicas entre matrices como producto por indentidad o producto por matriz nula
-        
+>>DONE
 
 
 
