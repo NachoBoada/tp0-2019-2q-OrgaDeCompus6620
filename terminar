@@ -1,4 +1,18 @@
-ver si usando la funcion exit no terminas perdiendo memoria
-poner bien el mensaje de Version
-al poner el .h se rompe de forma rara y si no lo pongo anda bien
+1) El bug
+
+2) al poner el .h se rompe de forma rara y si no lo pongo anda bien. Realmente no es necesario? Lo borramos y listo?
+
+3) terminar de ver si usando la funcion exit no terminas perdiendo memoria
+
+4) Compilarlo en NETBSD
+
+5) Probar algunos tests en NETBSD  (mas que nada los que sabemos que deberian andar y no los de tirar errores para ver como hace las cuentas)
+
+6) Poner bien el mensaje de Version despues de terminar de tocar y testear definitivamente el tp
+
+7) Facilitar compilacion a profes (no se como hacer esto)
+
+8) Hacer informe
+
+Hecho estos items y preferiblemente en ese orden ya estaria ya para entregar
 
