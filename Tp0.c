@@ -10,6 +10,13 @@ typedef struct matrix {
     double* array;
 } matrix_t;
 
+void printArray(int len,double* array){
+    int i;
+    for(i=0;i<len;i++){
+        printf("elemento %d: %g\n",i,array[i]);
+    }
+}
+
 void raiseError(const char* s){
 
     fprintf(stderr,"\n");
@@ -47,11 +54,28 @@ void readElementsInLine(double* array){
     float x;
     int offset;
     int i = 0;
-    while (sscanf(line, " %g%n", &x, &offset) == 1)
+    int returnValue;
+
+    while (true)
     {
-        line += offset;
-        array[i] = (double)x;
-        i++;
+        returnValue = sscanf(line, "%g%n", &x, &offset);
+
+        if (returnValue == 1){
+            line += offset;
+            array[i] = (double)x;
+            i++;
+            continue;
+        }
+
+        if (returnValue == -1){
+            break;
+        }
+
+        if (returnValue != 1){
+            raiseError("Input no numerico");
+            break;
+        }
+
     }
 }
 
@@ -228,6 +252,10 @@ int main(int argc, const char* argv[]){
         matrix_a = create_matrix(dimention,dimention);
         matrix_b = create_matrix(dimention,dimention);
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
+
+        printArray(dimention*dimention,matrix_a->array);
+        //printArray(dimention*dimention,matrix_b->array);
+
         matrix_c = matrix_multiply(matrix_a,matrix_b);
         print_matrix(OUT,matrix_c);
 
