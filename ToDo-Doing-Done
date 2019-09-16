@@ -2,9 +2,11 @@
 #(tab) Quien-Lo que hizo o está haciendo. (salvo en ToDo que va solo lo que se tiene que hacer). (Dejar una linea entre ToDo, Doing y Done).
 
 ToDo:
-    Probar que el programa corre correctamente en NetBSD/pmax(usando el simulador GXemul [1]) y Linux. (Portabilidad).
-    Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
-    Validar las Pruebas. Ver que el output de una prueba sea el esperado, comparando contra un archivo (supongo).
+    -Probar que el programa corre correctamente en NetBSD/pmax(usando el simulador GXemul [1]) y Linux. (Portabilidad).
+    -Informe (creo que se puede separar en subpartes como Informe:Introduccion, Informe:Diseño, etc..).
+    -Automatizar validación de Pruebas. Ver que el output de una prueba sea el esperado. Podemos pasar el output a un archivo y 
+    comparar caracter por caracter con otro que sea el validador de la prueba. Onda: cat file1.txt | tp0 > file1out.txt, y el out.txt compararlo con "ValidadorDefile1.txt" (no sé cómo hacer esto de comparar).
+    
     
 Doing:
 

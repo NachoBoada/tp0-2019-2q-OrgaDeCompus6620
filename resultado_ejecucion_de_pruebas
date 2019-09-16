@@ -26,4 +26,5 @@
 24  X   (da correctamente pero TRUNCA los floats)
 25  X   (fallo desconocido erro el ultimo numero de la matriz identidad)(MUY PROBABLEMENTE SEA POR EL TRUNCAMIENTO)
 26  X   (fallo muchisimo pero por lo menos dio 1 y 0)(MUY PROBABLEMENTE SEA POR EL TRUNCAMIENTO)
+27  X   (da correctamente pero TRUNCA los floats)
 
