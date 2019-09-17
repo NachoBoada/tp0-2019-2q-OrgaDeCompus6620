@@ -12,7 +12,10 @@
 
 #6) Poner bien el mensaje de Version despues de terminar de tocar y testear definitivamente el tp
 
-7) Facilitar compilacion a profes (no se como hacer esto)
+#7) Facilitar compilacion a profes (no se como hacer esto)
+(LAS INSTRUCCIONES SON EXACTAMENTE LAS DICHAS POR EL PPT DADO POR LA CATEDRA)
+(ESTO PARADO DESDE LINUX EN EL DIRECTORIO QUE CONTIENE AL ARCHIVO C: gcc -Wall -o Tp0 Tp0.c)
+(ESTO PARADO EN NETBSD EN EL DIRECTORIO QUE CONTIENE AL ARCHIVO C: gcc -Wall -O0 -S -mrnames Tp0.c)
 
 8) Hacer informe
 
