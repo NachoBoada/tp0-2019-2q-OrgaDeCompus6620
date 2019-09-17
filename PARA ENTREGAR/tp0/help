@@ -1,0 +1,11 @@
+Usage:
+    tp0 -h
+    tp0 -V
+    tp0 < in_file > out_file
+Options:
+    -V, --version   Print version and quit.
+    -h, --help      Print this information and quit.
+Examples:
+    tp0 < in.txt > out.txt
+    cat in.txt | tp0 > out.txt
+
