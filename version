@@ -1,7 +1,4 @@
-COMENTARIO PARA NOSOTROS: a que se referira con version?
+VERSION: 8.3
 
-Respuesta del docente:
-"Apliquen el criterio que mejor les parezca, y explicítenlo! "
-
-Podemos hacer que sea cada commit que hacemos con cambio de código una versión. Empezamos con la 1.0 que armó Axel, 
-y vamos haciendo 1.x, y si hacemos un cambio importante pasamos a 2.0 y así.
+CRITERIO:
+El primer numero de la version representa el numero de merges en git que hicimos desde un branch a master y el numero despues de la coma es la cantidad de commits hasta finalizado el tp0 desde el ultimo merge

@@ -43,3 +43,14 @@ usuario: root
 password: orga6620
 
 CONEXION LISTA
+
+PARA TRANSFERIR ARCHIVOS:
+
+DE guestOS a hostOS:
+ejemplo)
+scp ./Tp0.s axel@<ip>:/home/axel/repositorio_local/compus/transfered_from_NETBSD
+
+DE hostOS a hostguestOSOS:
+ejemplo)
+scp -P2222 root@127.0.0.1:/home/root/tp0/tp0.c /home/mi_usuario/66.20/tp0
+

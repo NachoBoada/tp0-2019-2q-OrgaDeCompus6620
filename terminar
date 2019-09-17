@@ -1,14 +1,16 @@
-1) El bug
+#1) El bug
 
-2) al poner el .h se rompe de forma rara y si no lo pongo anda bien. Realmente no es necesario? Lo borramos y listo?
+#2) al poner el .h se rompe de forma rara y si no lo pongo anda bien. Realmente no es necesario? Lo borramos y listo? 
+(AL FINAL DECIDIMOS QUE NO IMPORTA)
 
-3) terminar de ver si usando la funcion exit no terminas perdiendo memoria
+#3) terminar de ver si usando la funcion exit no terminas perdiendo memoria
+(HAY SOLO UN CASO QUE ES EN CREATE_MATRIX PERO ES UN CASO RARO QUE NO IMPORTA)
 
-4) Compilarlo en NETBSD
+#4) Compilarlo en NETBSD
 
-5) Probar algunos tests en NETBSD  (mas que nada los que sabemos que deberian andar y no los de tirar errores para ver como hace las cuentas)
+#5) Probar algunos tests en NETBSD  (mas que nada los que sabemos que deberian andar y no los de tirar errores para ver como hace las cuentas)
 
-6) Poner bien el mensaje de Version despues de terminar de tocar y testear definitivamente el tp
+#6) Poner bien el mensaje de Version despues de terminar de tocar y testear definitivamente el tp
 
 7) Facilitar compilacion a profes (no se como hacer esto)
 
