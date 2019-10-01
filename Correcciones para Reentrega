@@ -1,0 +1,18 @@
+Hernan Perez Masci <hernan.perez@gmail.com>
+Mié 25/9/2019 00:00
+BOADA - GOÑI - PEREZ MACHADO
+============================
+95212 - 87646 - 101127
+
+TP0
+ - Entrega 1: 17/09
+ - Nota: Reentregan
+ - Observaciones:
+  * En fgetc pueden tener un error de I/O y no lo detectan (creen que es EOF)
+  * En readElementsInLine, pierden el valor original de line al sumarle offset,
+    con lo cual no pueden liberarla. Igual falta un free (cada vez que se puede
+    producir un error deben liberar)
+  * en readInput, fscanf devuelve EOF ante fin de archivo o ante error (ver
+    manual cómo detectar si fue error)
+  * en print_matrix, validar errores de I/O en fprintf
+  * faltan conclusiones
