@@ -15,11 +15,6 @@ typedef struct matrix {
 void freeInputArray(){
     if (input != NULL){
         free(input);
-        printf("\n");
-        printf("=============\n");
-        printf("libere el array de inputs :D\n");
-        printf("=============\n");
-        printf("\n");
     }
     input = NULL;
 }
@@ -69,9 +64,6 @@ char *readLine(FILE* fp){
 
     str = realloc(str, sizeof(char)*len);
 
-    printf("str: %s\n: ",str);
-    printf("str: %p\n: ",str);
-
     return str;
 }
 
@@ -99,8 +91,8 @@ void readElementsInLine(int dimention, double* array){
         if (returnValue == 1){
             head_line_pointer += offset;
             array[i] = (double)x;
-            i++;
             continue;
+            i++;
         }
 
         if (returnValue == -1){
@@ -207,11 +199,6 @@ void destroy_matrix(matrix_t* m){
     if (m != NULL){
         free(m->array);
         free(m);
-        printf("\n");
-        printf("=============\n");
-        printf("libere matrix :D\n");
-        printf("=============\n");
-        printf("\n");
     }
 }
 

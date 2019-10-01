@@ -3,15 +3,14 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
-#define bufSize 20
+
+int bufSize = 20;
 
 int main(int argc, char *argv[])
 {
     FILE* fp;
-    char buf[bufSize];
+
     if (argc != 2)
-    bool concatenar = false;
-    char* cum;
 
 
     {
@@ -26,23 +25,37 @@ int main(int argc, char *argv[])
     }
 
     int i = 0;
+    char buf[bufSize];
+    int concatenar = 0;
+    int cumSize = bufSize;
+    char* cum = realloc(NULL,sizeof(char)*cumSize);
     while (fgets(buf, sizeof(buf), fp) != NULL)
     {
+
     if (concatenar){
-        cum = realloc(cum, sizeof(char)*(cum+=bufSize));
+        cumSize+=bufSize;
+        cum = realloc(cum, sizeof(char)*cumSize);
+        printf("lala\n");
         cum = strcat(cum,buf);
+        concatenar = 0;
+    }
+    else{
+        cum = buf;
     }
 
-    cum = buf;
     printf("%s\n", cum);
     printf("i: %d\n", i);
 
-    if (bif[strlen(buf) - 1] != '\n'){
-        concatenar = true;
+    if (cum[strlen(cum) - 1] != '\n'){
+        concatenar = 1;
     }
 
     i++;
 
+    }
+
+    if (ferror(stdin) != 0){
+        //
     }
 
     fclose(fp);

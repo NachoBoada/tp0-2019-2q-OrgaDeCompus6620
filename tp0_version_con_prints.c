@@ -3,12 +3,26 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
+double* input = NULL; //GLOBAL ACCESS VARIABLE
 
 typedef struct matrix {
     size_t rows;
     size_t cols;
     double* array;
 } matrix_t;
+
+
+void freeInputArray(){
+    if (input != NULL){
+        free(input);
+        printf("\n");
+        printf("=============\n");
+        printf("libere el array de inputs :D\n");
+        printf("=============\n");
+        printf("\n");
+    }
+    input = NULL;
+}
 
 void printArray(int len,double* array){
     int i;
@@ -24,6 +38,8 @@ void raiseError(const char* s){
     fprintf(stderr,"ERROR MESSAGE: %s\n",s);
     fprintf(stderr,"=======================\n");
     fprintf(stderr,"\n");
+
+    freeInputArray();
     exit (EXIT_FAILURE);
 }
 
@@ -33,6 +49,7 @@ char *readLine(FILE* fp){
     char *str;
     int ch;
     size_t len = 0;
+
     str = realloc(NULL, sizeof(char)*size);//size is start size
     if(!str)return str;
     while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
@@ -42,14 +59,29 @@ char *readLine(FILE* fp){
             if(!str)return str;
         }
     }
+
+    if (ferror(stdin) != 0){
+        free(str);
+        raiseError("FGETC ERROR: I/O error");
+    }
+
     str[len++]='\0';
 
-    return realloc(str, sizeof(char)*len);
+    str = realloc(str, sizeof(char)*len);
+
+    printf("str: %s\n: ",str);
+    printf("str: %p\n: ",str);
+
+    return str;
 }
 
 void readElementsInLine(int dimention, double* array){
 
     char* line = readLine(stdin);
+    char* head_line_pointer = line;
+    printf("line: %s\n: ",line);
+    printf("head_line_pointer: %s\n: ",head_line_pointer);
+    printf("line: %p\n: ",line);
 
     float x;
     int offset;
@@ -59,10 +91,22 @@ void readElementsInLine(int dimention, double* array){
 
     while (true)
     {
-        returnValue = sscanf(line, "%g%n", &x, &offset);
+        returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
+        if (ferror(stdin) != 0){
+            free(array);
+            free(line);
+            raiseError("SSCANF ERROR: I/O error");
+        }
+        printf("\n");
+        printf("line: %s\n: ",line);
+        printf("head_line_pointer: %s\n: ",head_line_pointer);
+        printf("returnValue: %d\n: ",returnValue);
+
 
         if (returnValue == 1){
-            line += offset;
+            head_line_pointer += offset;
+            printf("offset: %d\n: ",offset);
+            printf("guardo el: %g\n: ",x);
             array[i] = (double)x;
             i++;
             continue;
@@ -72,6 +116,11 @@ void readElementsInLine(int dimention, double* array){
             cantidadDeElementosLeidos = i;
             if(cantidadDeElementosLeidos != dimention*dimention*2){
                 free(array);
+                printf("offset: %d\n: ",offset);
+                printf("line: %s\n: ",line);
+                printf("head_line_pointer: %s\n: ",head_line_pointer);
+                printf("line: %p\n: ",line);
+                free(line);
                 raiseError("No coincide dimension con cantidad de elementos ingresados");
             }
             break;
@@ -79,6 +128,7 @@ void readElementsInLine(int dimention, double* array){
 
         if (returnValue != 1){
             free(array);
+            free(line);
             raiseError("Input no numerico");
             break;
         }
@@ -97,7 +147,8 @@ double* readInput(int* dimention){
 
     //CHECK IF END OF LINE
     if (returnValue == -1){
-        exit (0);
+        if (ferror(stdin) != 0){{raiseError("FSCANF ERROR: I/O error");}}
+        else{exit (0);} // en este caso se identifica que el EOF no se debe a un error y se finaliza el programa sin problemas
     }
     //CHECK IF INPUT IS NUMERIC
     if (returnValue != 1){
@@ -129,6 +180,7 @@ void outputFile(FILE* out, char fileName[]){
     char s[100] = "";
     strcat(s, "./");
     strcat(s, fileName);
+    int return_value;
 
     //TRIES TO OPEN FILE
     FILE* fp;
@@ -141,8 +193,12 @@ void outputFile(FILE* out, char fileName[]){
     char c;
 	while(c != EOF){
         c = getc(fp);
-        fprintf(out,"%c",c);
+        if ((return_value = fprintf(out,"%c",c)) < 0){raiseError("FPRINTF ERROR: I/O error");}
 	}
+
+    if (ferror(stdin) != 0){
+        raiseError("FGETC ERROR: I/O error");
+    }
 }
 
 matrix_t* create_matrix(size_t rows, size_t cols){
@@ -164,6 +220,11 @@ void destroy_matrix(matrix_t* m){
     if (m != NULL){
         free(m->array);
         free(m);
+        printf("\n");
+        printf("=============\n");
+        printf("libere matrix :D\n");
+        printf("=============\n");
+        printf("\n");
     }
 }
 
@@ -211,16 +272,17 @@ void print_matrix(FILE* out, matrix_t* matrix_m){
     int dimention = matrix_m->rows;
     double x;
     int i;
+    int return_value;
 
-    fprintf(out,"%d",dimention);
-    fprintf(out,"%c",' ');
+    if ((return_value = fprintf(out,"%d",dimention)) < 0){raiseError("FPRINTF ERROR: I/O error");} //se mira que el valor no sea negativo porque si lo es entonces es un error segun la documentacion de fprinf
+    if ((return_value = fprintf(out,"%c",' ')) < 0){raiseError("FPRINTF ERROR: I/O error");}
 
 	for (i = 0; i < dimention*dimention; i++){
         x = matrix_m->array[i];
-		fprintf(out,"%g",x);
-        fprintf(out,"%c",' ');
+        if ((return_value = fprintf(out,"%g",x)) < 0){raiseError("FPRINTF ERROR: I/O error");}
+        if ((return_value = fprintf(out,"%c",' ')) < 0){raiseError("FPRINTF ERROR: I/O error");}
 	}
-    fprintf(out,"\n");
+    if ((return_value = fprintf(out,"\n")) < 0){raiseError("FPRINTF ERROR: I/O error");}
 }
 
 int main(int argc, const char* argv[]){
@@ -237,23 +299,25 @@ int main(int argc, const char* argv[]){
             endProgram = true;
         }
 
-        if (strcmp(argv[1],"-V") == 0 || strcmp(argv[1],"--version") == 0){
+        else if (strcmp(argv[1],"-V") == 0 || strcmp(argv[1],"--version") == 0){
             char fileName[] = "version";
             outputFile(OUT,fileName);
             endProgram = true;
         }
+        else{
+            raiseError("command parameter invalid");
+        }
     }
 
     //MAIN PROGRAM
-    bool thereAreMoreProductsToDo = true;
-    while (thereAreMoreProductsToDo && !endProgram){
+    while (!endProgram){
 
         matrix_t* matrix_a;
         matrix_t* matrix_b;
         matrix_t* matrix_c;
 
         int dimention;
-        double* input = readInput(&dimention);
+        input = readInput(&dimention);
         matrix_a = create_matrix(dimention,dimention);
         matrix_b = create_matrix(dimention,dimention);
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
@@ -265,9 +329,7 @@ int main(int argc, const char* argv[]){
         destroy_matrix(matrix_b);
         destroy_matrix(matrix_c);
 
-        if (input != NULL){
-            free(input);
-        }
+        freeInputArray();
     }
     return 0;
 }
