@@ -258,9 +258,6 @@ int main(int argc, const char* argv[]){
         matrix_b = create_matrix(dimention,dimention);
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
 
-        //printArray(dimention*dimention,matrix_a->array);
-        //printArray(dimention*dimention,matrix_b->array);
-
         matrix_c = matrix_multiply(matrix_a,matrix_b);
         print_matrix(OUT,matrix_c);
 
