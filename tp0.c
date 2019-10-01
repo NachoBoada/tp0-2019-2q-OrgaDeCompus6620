@@ -67,13 +67,21 @@ char *readLine(FILE* fp){
 
     str[len++]='\0';
 
-    return realloc(str, sizeof(char)*len);
+    str = realloc(str, sizeof(char)*len);
+
+    printf("str: %s\n: ",str);
+    printf("str: %p\n: ",str);
+
+    return str;
 }
 
 void readElementsInLine(int dimention, double* array){
 
     char* line = readLine(stdin);
     char* head_line_pointer = line;
+    printf("line: %s\n: ",line);
+    printf("head_line_pointer: %s\n: ",head_line_pointer);
+    printf("line: %p\n: ",line);
 
     float x;
     int offset;
@@ -84,10 +92,21 @@ void readElementsInLine(int dimention, double* array){
     while (true)
     {
         returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
-        if (ferror(stdin) != 0){raiseError("SSCANF ERROR: I/O error");}
+        if (ferror(stdin) != 0){
+            free(array);
+            free(line);
+            raiseError("SSCANF ERROR: I/O error");
+        }
+        printf("\n");
+        printf("line: %s\n: ",line);
+        printf("head_line_pointer: %s\n: ",head_line_pointer);
+        printf("returnValue: %d\n: ",returnValue);
+
 
         if (returnValue == 1){
             head_line_pointer += offset;
+            printf("offset: %d\n: ",offset);
+            printf("guardo el: %g\n: ",x);
             array[i] = (double)x;
             i++;
             continue;
@@ -97,6 +116,10 @@ void readElementsInLine(int dimention, double* array){
             cantidadDeElementosLeidos = i;
             if(cantidadDeElementosLeidos != dimention*dimention*2){
                 free(array);
+                printf("offset: %d\n: ",offset);
+                printf("line: %s\n: ",line);
+                printf("head_line_pointer: %s\n: ",head_line_pointer);
+                printf("line: %p\n: ",line);
                 free(line);
                 raiseError("No coincide dimension con cantidad de elementos ingresados");
             }

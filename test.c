@@ -3,15 +3,48 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
+#define bufSize 20
 
-int main(int argc, const char* argv[]){
+int main(int argc, char *argv[])
+{
+    FILE* fp;
+    char buf[bufSize];
+    if (argc != 2)
+    bool concatenar = false;
+    char* cum;
 
-int a;
 
-a = EOF;
-printf("sample\n");
-printf("%d\n",a);
-printf("sample2\n");
+    {
+    fprintf(stderr,
+            "Usage: %s <soure-file>\n", argv[0]);
+    return 1;
+    }
+    if ((fp = fopen(argv[1], "r")) == NULL)
+    { /* Open source file. */
+    perror("fopen source-file");
+    return 1;
+    }
 
-return 0;
+    int i = 0;
+    while (fgets(buf, sizeof(buf), fp) != NULL)
+    {
+    if (concatenar){
+        cum = realloc(cum, sizeof(char)*(cum+=bufSize));
+        cum = strcat(cum,buf);
+    }
+
+    cum = buf;
+    printf("%s\n", cum);
+    printf("i: %d\n", i);
+
+    if (bif[strlen(buf) - 1] != '\n'){
+        concatenar = true;
+    }
+
+    i++;
+
+    }
+
+    fclose(fp);
+    return 0;
 }
