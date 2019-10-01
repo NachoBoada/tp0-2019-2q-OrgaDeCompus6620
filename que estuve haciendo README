@@ -51,3 +51,10 @@ En la funcion print_matrix() y en la funcion outputFile() se cambian todos los f
 if ((return_value = fprintf(out,"%c",' ')) < 0){raiseError("FPRINTF ERROR: I/O error");} 
 validando que si el return_value es negativo es un error segun la documentacion
 
+
+VARIOS
+==========================
+Agregue para que cuando uno ingresa un parametro de comando invalido tire error
+
+Se agrega if (ferror(stdin) != 0){{raiseError("SSCANF ERROR: I/O error");}} abajo del sscanf en readElementsInLine()
+

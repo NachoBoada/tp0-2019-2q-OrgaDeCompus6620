@@ -1,8 +1,6 @@
 ToDo:
 
-    En Linux correr las pruebas:
-        {1,2,4,5,6,9,10,11,12,13,14,26,27} #son las mas exigentes respecto a I/O y calculos
-        probar {-V, -h, --version, --help}
+    IMPORTANTE: ARREGLAR BUG EN PRUEBA 12
 
     En NETBSD correr las pruebas:
         {1,2,4,5,6,9,10,11,12,13,14,26,27} #son las mas exigentes respecto a I/O y calculos
@@ -20,6 +18,8 @@ ToDo:
 
     Agregar en el informe una seccion donde se ponga el contenido del archivo "que estuve haciendo README" para facilitarle al profe ver que son las cosas que agregamos
 
+    Actualizar la version del archivo Version
+
 
 Doing:
 
@@ -32,4 +32,8 @@ Done:
     correccion 3)
 
     correccion 4)
+
+    En Linux correr las pruebas:
+        {1,2,4,5,6,9,10,11,12,13,14,26,27} #son las mas exigentes respecto a I/O y calculos
+        probar {-V, -h, --version, --help}
 

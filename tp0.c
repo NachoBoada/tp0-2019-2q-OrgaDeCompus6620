@@ -84,6 +84,7 @@ void readElementsInLine(int dimention, double* array){
     while (true)
     {
         returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
+        if (ferror(stdin) != 0){raiseError("SSCANF ERROR: I/O error");}
 
         if (returnValue == 1){
             head_line_pointer += offset;
@@ -275,10 +276,13 @@ int main(int argc, const char* argv[]){
             endProgram = true;
         }
 
-        if (strcmp(argv[1],"-V") == 0 || strcmp(argv[1],"--version") == 0){
+        else if (strcmp(argv[1],"-V") == 0 || strcmp(argv[1],"--version") == 0){
             char fileName[] = "version";
             outputFile(OUT,fileName);
             endProgram = true;
+        }
+        else{
+            raiseError("command parameter invalid");
         }
     }
 
