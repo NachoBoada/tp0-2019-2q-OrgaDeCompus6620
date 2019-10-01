@@ -1,13 +1,5 @@
 ToDo:
 
-    correcion 1)
-
-    correccion 2)
-
-    correccion 3)
-
-    correccion 4)
-
     En Linux correr las pruebas:
         {1,2,4,5,6,9,10,11,12,13,14,26,27} #son las mas exigentes respecto a I/O y calculos
         probar {-V, -h, --version, --help}
@@ -22,10 +14,22 @@ ToDo:
 
     Actualizar el informe con el nuevo codigo C
 
-    Agregar conclusiones al informe
+    Agregar conclusiones al informe (correcion 5)
+
+    Agregar en informe la implementacion de corte de programa y liberacion de memoria usando una variable global
+
+    Agregar en el informe una seccion donde se ponga el contenido del archivo "que estuve haciendo README" para facilitarle al profe ver que son las cosas que agregamos
 
 
 Doing:
 
 Done:
+
+    correcion 1)
+
+    correccion 2)
+
+    correccion 3)
+
+    correccion 4)
 
