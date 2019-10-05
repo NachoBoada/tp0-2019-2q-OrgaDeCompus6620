@@ -4,10 +4,6 @@ ToDo:
 
     Agregar conclusiones al informe (correcion 5)
 
-    Agregar en informe la implementacion de corte de programa y liberacion de memoria usando una variable global
-
-    Agregar en el informe una seccion donde se ponga el contenido del archivo "que estuve haciendo README" para facilitarle al profe ver que son las cosas que agregamos
-
 
 
 
@@ -38,3 +34,8 @@ Done:
     Actualizar el informe con el nuevo codigo C
 
     Actualizar la version del archivo Version
+
+
+    Agregar en informe la implementacion de corte de programa y liberacion de memoria usando una variable global
+
+    Agregar en el informe una seccion donde se ponga el contenido del archivo "que estuve haciendo README" para facilitarle al profe ver que son las cosas que agregamos
