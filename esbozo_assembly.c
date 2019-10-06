@@ -1,10 +1,12 @@
 matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
+    int aux1;
+    int aux2;
     int row;
     int column;
     int i;
     int j;
-    double element;
     int dimention;
+    double element;
     dimention = matrix_a->rows;
     matrix_t* matrix_c;
     matrix_c = create_matrix(dimention,dimention);
@@ -23,3 +25,4 @@ matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
             element = element + aux1;}
         matrix_c->array[i] = element;}
     return matrix_c;}
+

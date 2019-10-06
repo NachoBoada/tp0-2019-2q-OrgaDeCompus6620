@@ -1,0 +1,56 @@
+*) Se requiere tener instalado sshd
+    (para instalar https://linuxize.com/post/how-to-enable-ssh-on-ubuntu-18-)
+*) luego de instalarlo correr sudo /etc/init.d/ssh start
+
+
+
+
+
+0)
+abris una terminal (guestOS)
+
+1) 
+pararse en directorio de la imagen
+
+2)
+./gxemul -e 3max -d netbsd-pmax.img
+
+3)
+usuario: root
+password: orga6620
+
+4)
+abris otra terminal (hostOS)
+
+5)
+(en hostOS)
+ifconfig lo:0 172.20.0.1
+
+6)
+(en guestOS)
+ssh -R 2222:127.0.0.1:22 gxemul@172.20.0.1
+usuario: gxemul
+password: gxeuml
+
+EN CASO DE FALLO)
+pararse en ./home/<usuario>/.ssh
+borrar el contenido del archivo known_hosts con algun editor de texto por consola (por ej ejecuntando el comando vi known_hosts)
+
+7)
+(en hostOS)
+ssh -p 2222 root@127.0.0.1
+usuario: root
+password: orga6620
+
+CONEXION LISTA
+
+PARA TRANSFERIR ARCHIVOS:
+
+DE guestOS a hostOS:
+ejemplo)
+hostOS$ scp -P2222 root@127.0.0.1:/root/tp0/tp0.c /home/mi_usuario/66.20/tp0
+
+DE hostOS a guestOS:
+ejemplo)
+scp -P2222 -r /home/mi_usuario/66.20/tp0 root@127.0.0.1:/root
+
