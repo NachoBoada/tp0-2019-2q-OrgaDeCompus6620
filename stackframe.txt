@@ -1,26 +1,29 @@
     ===================================================== STACK FRAME de MAIN
-84 ptr_matrix_b
-80 ptr_matrix_a
+92 ptr_matrix_b
+88 ptr_matrix_a
     ===================================================== STACK FRAME de Multiply
     ============================ SRA
+84  <padding>
+80  ra
 76  $fp
 72  gp
     ============================ LTA  
-68  <padding>
-64  aux2(2da parte)
-60  aux2
-56  aux1(2da parte)
-52  aux1
-48  element_matrix_b(2da parte)
-44  element_matrix_b
-40  element_matrix_a(2da parte)
-36  element_matrix_a
-32  element(2da parte)
-28  element
-24  ptr_matrix_b
-20  ptr_matrix_a
-16  j
-12  i
-8   row
-4   column
+68  aux2(2da parte)
+64  aux2
+60  aux1(2da parte)
+56  aux1
+52  element(2da parte)
+48  element
+44  ptr_matrix_c
+40  ptr_matrix_b
+36  ptr_matrix_a
+32  j
+28  i
+24  row
+20  column
+16  dimention
+    ============================ ABA
+12  <nada, se pone por convencion>
+8   <nada, se pone por convencion>
+4   dimention
 0   dimention
