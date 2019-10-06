@@ -1,5 +1,9 @@
-ToDo:
-
+ToDo: 
+  Del archivo "esbozo_assembly.c":
+  Axel-   Líneas 1 a 9.
+  Nacho-  Línas  10 a 17.
+  Mauro-  Líneas 18 a 25.
+  
 Doing:
 
 Done:
