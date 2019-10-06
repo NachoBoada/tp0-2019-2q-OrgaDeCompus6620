@@ -13,9 +13,8 @@ matrix_multiply:
 
 #Creo SRA de la calee
 
-	.cprestore 24 
-	sw	ra,32(sp)
-	sw	$fp,28(sp)	
+	.cprestore 72 
+	sw	$fp,76(sp)	
 	move	$fp,sp
 
 #Creo ABA de la caller
