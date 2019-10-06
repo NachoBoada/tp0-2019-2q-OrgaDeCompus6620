@@ -1,9 +1,11 @@
 ToDo: 
   Del archivo "esbozo_assembly.c":
-  Axel-   Líneas 1 a 9.
   Nacho-  Línas  10 a 17.
-  Mauro-  Líneas 18 a 25.
+  Mauro-  Líneas 18 a 26.
   
 Doing:
+  Axel-   Líneas 27.
 
 Done:
+
+  Axel-   Líneas 1 a 9.
