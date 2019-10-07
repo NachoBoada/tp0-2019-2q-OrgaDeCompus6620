@@ -74,7 +74,7 @@ primer_for:
 
 #(SE TRADUCE) row = (int)(i / dimention);
 
-	divu t0, t3, t1 	        #t0 = (i / dimention).
+	divu t0, t3, t1 	        #t0 = (i / dimention).                                                                                          (OJO! "capaz que habria que tener en cuenta lo de LO/HI")
 	sw   t0, 24($fp)	        #row esta en 24($fp), entonces queda row = (int)(i / dimention).
 
 
