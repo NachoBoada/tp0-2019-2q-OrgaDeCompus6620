@@ -1,6 +1,8 @@
 #include <mips/regdef.h>
 
 	.text
+    .abicalls
+    .align 2                    #QUIZAS HAYA QUE SACARLO Y QUIZAS SEA FUENTE DE ERRORES. TENER EN CUENTA
 	.ent matrix_multiply
 	.globl matrix_multiply
 	
@@ -9,6 +11,11 @@ matrix_multiply:
 #Se crea stack frame de la callee
 
 	.frame 	$fp,88,ra
+
+	#.set	noreorder	        # apaga reordenamiento de instrucciones
+	#.cpload t9		            # directiva usada para codigo PIC
+	#.set	reorder		        # enciende reordenamiento de instrucciones
+
 	subu 	sp,sp,88
 
 #Se crea SRA de la callee
