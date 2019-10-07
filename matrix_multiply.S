@@ -32,7 +32,7 @@ matrix_multiply:
 
 #CODIGO MAURO
 
-return:
+ret:
     lw v0,44($fp)
 
 fin:	
