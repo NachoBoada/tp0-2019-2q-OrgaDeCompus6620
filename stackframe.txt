@@ -8,10 +8,10 @@
 76  $fp
 72  gp
     ============================ LTA  
-68  aux2(2da parte)
-64  aux2
-60  aux1(2da parte)
-56  aux1
+68  aux2(2da parte) (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+64  aux2            (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+60  aux1(2da parte) (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+56  aux1            (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
 52  element(2da parte)
 48  element
 44  ptr_matrix_c

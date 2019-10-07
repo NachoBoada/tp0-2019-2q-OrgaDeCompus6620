@@ -95,73 +95,60 @@ segundo_for:
 
 #(SE TRADUCE) aux1 = row*dimention;
 
-	lw t6, 16($fp) #t6 cargo dimention
-	lw t7, 24($fp) #t7 cargo row
-	mul t8, t6, t7 #t8 tengo aux1 --- aux1=row*dimention	
+	lw t6, 16($fp)              #t6 cargo dimention
+	lw t7, 24($fp)              #t7 cargo row
+	mul t8, t6, t7              #t8 tengo aux1 --- aux1=row*dimention	
 	
 #(SE TRADUCE) aux1 = aux1 + j;
 
-	add t8, t8, t5 #aux= aux1+j											 
+	add t8, t8, t5              #aux1= aux1+j											 
 										 
 #(SE TRADUCE) aux1 = matrix_a->array[aux1];
 
-	lw  t0, 36($fp) #cargo el puntero a la matrix_a en t0.
-	sll t0, t0, 2   #corro 4 bytes para apuntar a la direccion de matriz_a->rows.
-	sllv t0, t0, t8 #t8 tiene aux1 desplazo por registro aux1
-	ld t8, 0(t0)    #cargo el valor apuntado por matrix_a->array[aux1] en t8.
+	lw  t0, 36($fp)             #cargo el puntero a la matrix_a en t0.
+	sll t0, t0, 2               #corro 4 bytes para apuntar a la direccion de matriz_a->rows.
+	sllv t0, t0, t8             #t8 tiene aux1 desplazo por registro aux1
+	ld t8, 0(t0)                #cargo el valor apuntado por matrix_a->array[aux1] en t8.                   (CORREGIR ////ACA SE CARGA UN VALOR DOUBLE EN UN REGISTRO QUE NO TIENE FORMATO FLOAT
 										 
 										 
 #(SE TRADUCE) aux2 = j*dimention;
 
-	mul t7, t5, t6 #Borro row y obtengo aux2 -- aux2=j*dimention								 
+	mul t7, t5, t6              #Borro row y obtengo aux2 -- aux2=j*dimention                               								 
 										 
 #(SE TRADUCE) aux2 = aux2 + column;
 
-	lw t4, 20($fp)	#En 20($fp) esta el valor de column. Lo cargo en t4. por la dudas, puede sobrar porque creo que no se modifica
-	add t7, t7, t4	#t7 tiene aux2 ---- aux2 = aux2 + column;						 
+	lw t4, 20($fp)	            #En 20($fp) esta el valor de column. Lo cargo en t4. por la dudas, puede sobrar porque creo que no se modifica
+	add t7, t7, t4	            #t7 tiene aux2 ---- aux2 = aux2 + column;						 
 										 
 #(SE TRADUCE) aux2 = matrix_b->array[aux2];
 
-	lw  t0, 40($fp) #cargo el puntero a la matrix_b en t0.
-	sll t0, t0, 2   #corro 4 bytes para apuntar a la direccion de matriz_b->rows.
-	sllv t0, t0, t7 #t7 tiene aux2 desplazo por registro aux2
-	ld t7, 0(t0)    #cargo el valor apuntado por matrix_b->array[aux2] en t7.									 
+	lw  t0, 40($fp)             #cargo el puntero a la matrix_b en t0.
+	sll t0, t0, 2               #corro 4 bytes para apuntar a la direccion de matriz_b->rows.               (CORREGIR ////SE ESTA APUNTANDO A matriz_b->rows NO A matriz_b->array Y DEBERIA SER matriz_b->array
+	sllv t0, t0, t7             #t7 tiene aux2 desplazo por registro aux2                                   (CORREGIR ////CREO QUE NO SE ESTA SELECCIONANDO BIEN EL ELEMENTO CON ESTA LOGICA
+	ld t7, 0(t0)                #cargo el valor apuntado por matrix_b->array[aux2] en t7.                   (CORREGIR ////ACA SE CARGA UN VALOR DOUBLE EN UN REGISTRO QUE NO TIENE FORMATO FLOAT 
 										 
 #(SE TRADUCE) aux1 = aux1 * aux2;
 
-	mul t8, t8,t7 #t8 tiene aux1 ---- aux1 = aux1 * aux2;								 
+	mul t8, t8,t7              #t8 tiene aux1 ---- aux1 = aux1 * aux2;                                      (CORREGIR ////DEBERIA SER UNA CUENTA ENTRE DOUBLES
 										 
 #(SE TRADUCE) element = element + aux1;
 
-	ld f1, 48($fp) #cargo en f1 element, puede estar de mas dado que no veo que se modifique f1
-	add f1,t8 #element = element + aux1
-	sd f1, 48($fp) 		#element se guarda en el frame en la posicion 48.
-	j segundo_for
+	ld f1, 48($fp)             #cargo en f1 element, puede estar de mas dado que no veo que se modifique f1
+	add f1,t8                  #element = element + aux1                                                    (CORREGIR ////HAY QUE CASTEAR t8 a double
+	sd f1, 48($fp) 		       #element se guarda en el frame en la posicion 48.
 
-fin_segundo_for
-
-#(SE TRADUCE) matrix_c->array[i] = element;
-
-	lw t3,28($fp) #cargo el valor de i por las dudas --- puede ser redundante si no se modifica.
-	lw  t0, 44($fp) #cargo el puntero a la matrix_b en t0.
-	sll t0, t0, 2   #corro 4 bytes para apuntar a la direccion de matriz_b->rows.
-	sllv t0, t0, t3 #t3 tiene i desplazo por registro i
-	sd f1, 0(t0)    #guardo el valor de element f1 en matrix_c->array[i].
-
-		
-    #aux1 = row*dimention;
-    #aux1 = aux1 + j;
-    #aux1 = matrix_a->array[aux1];
-    #aux2 = j*dimention;
-    #aux2 = aux2 + column;
-    #aux2 = matrix_b->array[aux2];
-    #aux1 = aux1 * aux2;
-    #element = element + aux1;}
 	addi t5, t5, 1		        #j++.
 
 add_element:
-    #matrix_c->array[i] = element;
-	addi t3, t3, 1		        #i++.
+
+#(SE TRADUCE) matrix_c->array[i] = element;
+
+	lw  t0, 44($fp)            #cargo el puntero a la matrix_b en t0.
+	sll t0, t0, 2              #corro 4 bytes para apuntar a la direccion de matriz_b->rows.                (CORREGIR ////SE ESTA APUNTANDO A matriz_b->rows NO A matriz_b->array Y DEBERIA SER matriz_b->array
+	sllv t0, t0, t3            #t3 tiene i desplazo por registro i                                          (CORREGIR ////CREO QUE NO SE ESTA SELECCIONANDO BIEN EL ELEMENTO CON ESTA LOGICA
+	sd f1, 0(t0)               #guardo el valor de element f1 en matrix_c->array[i].
+
+	addi t3, t3, 1		       #i++.
 
 ##################################################
 
