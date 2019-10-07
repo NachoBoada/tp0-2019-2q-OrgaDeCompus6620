@@ -28,10 +28,21 @@ matrix_multiply:
 	sw	a0,36($fp)	    #Guarda puntero matrix_a en LTA de la callee
 	sw	a1,40($fp)	    #Guarda puntero matrix_b en LTA de la callee
 
+#CODIGO NACHO
 
+#CODIGO MAURO
 
-	
+return:
+    lw v0,44($fp)
 
+fin:	
+    lw	ra,80(sp)
+	lw	$fp,76(sp)
+	addu	sp,sp,88
+
+	jr	ra
+	.end 	matrix_multiply
+    
 
 
 	
