@@ -17,8 +17,8 @@
 44  ptr_matrix_c
 40  ptr_matrix_b
 36  ptr_matrix_a
-32  j
-28  i
+32  j               (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+28  i               (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
 24  row
 20  column
 16  dimention
