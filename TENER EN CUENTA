@@ -1,0 +1,3 @@
+estamos compilando en MIPS con:
+
+ gcc -march=mips32 -Wall -o tp1 tp1.c matrix_multiply.S
