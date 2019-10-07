@@ -71,7 +71,6 @@ matrix_multiply:
 primer_for:
 	bge  t3, t2, ret            #si "i" es mayor o igual a dimention * dimention, deja de procesar porque se termino el calculo de la matriz resultante.
 
-
 #(SE TRADUCE) row = (int)(i / dimention);
 
 	divu t0, t3, t1 	        #t0 = (i / dimention).                                                                                          (OJO! "capaz que habria que tener en cuenta lo de LO/HI")
@@ -85,10 +84,10 @@ primer_for:
 
 
 #(SE TRADUCE) element = 0;
-
-	li  t0, 0			                                                                                                                        (ERROR DE ENSABLE: "Error: illegal operands ")
-	sw  t0, 48($fp) 		        #element es 48($fp) por lo que aca se hace element = 0;
-    sw  t0, 52($fp) 		        #como element es un double tambien se debe hacer cero 4 bytes arrbia de su cominezo en 52($fp)
+    
+    li  t0, 0
+    sw  t0, 48($fp) 		    #element es 48($fp) por lo que aca se hace element = 0;
+    sw  t0, 52($fp) 		    #como element es un double tambien se debe hacer cero 4 bytes arrbia de su cominezo en 52($fp)
 
 #(SE TRADUCE) for (j = 0; j < dimention; j++):;
 
@@ -119,7 +118,7 @@ segundo_for:
 										 
 #(SE TRADUCE) aux2 = j*dimention;
 
-	mul t7, t5, t6              #Borro row y obtengo aux2 -- aux2=j*dimention                               								 
+    mul t7, t5, t6              #Borro row y obtengo aux2 -- aux2=j*dimention                               								 
 										 
 #(SE TRADUCE) aux2 = aux2 + column;
 
@@ -135,7 +134,7 @@ segundo_for:
 										 
 #(SE TRADUCE) aux1 = aux1 * aux2;
 
-	mul.d $f2, $f2, $f4                                                                                                                             (ERROR DE ENSABLE: "Error: illegal operands ")           
+	mul.d $f2, $f2, $f4        
 										 
 #(SE TRADUCE) element = element + aux1;
 
