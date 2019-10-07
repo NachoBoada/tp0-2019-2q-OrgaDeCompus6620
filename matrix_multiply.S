@@ -74,9 +74,9 @@ primer_for:
 
 #(SE TRADUCE) row = (int)(i / dimention);
 
-	divu f0, t3, t1 	        #f0 = (i / dimention).
-	cvt.w.d  f0, f0   	        #(int)(i / dimention).
-	sw f0, 24($fp)		        #row esta en 24($fp), entonces queda row = (int)(i / dimention).
+	divu f0, t3, t1 	        #f0 = (i / dimention).                                                                                          (ERROR DE ENSABLE: "Error: illegal operands ")
+	cvt.w.d  f0, f0   	        #(int)(i / dimention).                                                                                          (ERROR DE ENSABLE: "Error: illegal operands ")
+	sw f0, 24($fp)		        #row esta en 24($fp), entonces queda row = (int)(i / dimention).                                                (ERROR DE ENSABLE: "Error: illegal operands ")
 
 
 #(SE TRADUCE) column = (int)(i % dimention);
@@ -87,8 +87,8 @@ primer_for:
 
 #(SE TRADUCE) element = 0;
 
-	li f0, 0			
-	sd f0, 48($fp) 		        #element es 48($fp) por lo que aca se hace element = 0;
+	li f0, 0			                                                                                                                        (ERROR DE ENSABLE: "Error: illegal operands ")
+	sd f0, 48($fp) 		        #element es 48($fp) por lo que aca se hace element = 0;                                                         (ERROR DE ENSABLE: "Error: illegal operands ")
 
 #(SE TRADUCE) for (j = 0; j < dimention; j++):;
 
@@ -114,7 +114,7 @@ segundo_for:
 	lw  t0, 36($fp)             #cargo el puntero a la matrix_a (que es el mismo que matriz_a->rows) en t0.
 	sll t8, t8, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_a->array.
 	add t0, t0, t8              #se desplaza el puntero al array de matriz_a->array
-	ld  f1, 0(t0)               #cargo el valor apuntado por matrix_a->array[aux1] en f1 porque el contenido ahora es un double.
+	ld  f1, 0(t0)               #cargo el valor apuntado por matrix_a->array[aux1] en f1 porque el contenido ahora es un double.                (ERROR DE ENSABLE: "Error: illegal operands ")
 										 
 										 
 #(SE TRADUCE) aux2 = j*dimention;
@@ -131,17 +131,17 @@ segundo_for:
 	lw  t0, 40($fp)             #cargo el puntero a la matrix_b (que es el mismo que matriz_b->rows) en t0.
 	sll t7, t7, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_b->array.
     add t0, t0, t7              #se desplaza el puntero al array de matriz_b->array
-	ld  f2, 0(t0)               #cargo el valor apuntado por matrix_b->array[aux2] en f2 porque el contenido ahora es un double. 
+	ld  f2, 0(t0)               #cargo el valor apuntado por matrix_b->array[aux2] en f2 porque el contenido ahora es un double.                (ERROR DE ENSABLE: "Error: illegal operands ")
 										 
 #(SE TRADUCE) aux1 = aux1 * aux2;
 
-	mul f1, f1,f2               
+	mul f1, f1,f2                                                                                                                               (ERROR DE ENSABLE: "Error: illegal operands ")           
 										 
 #(SE TRADUCE) element = element + aux1;
 
-	ld f0, 48($fp)             #cargo en f1 element, puede estar de mas dado que no veo que se modifique f1
-	add f0,f1                  #element = element + aux1
-	sd f0, 48($fp) 		       #element se guarda en el frame en la posicion 48.
+	ld f0, 48($fp)             #cargo en f1 element, puede estar de mas dado que no veo que se modifique f1                                     (ERROR DE ENSABLE: "Error: illegal operands ")
+	add f0,f1                  #element = element + aux1                                                                                        (ERROR DE ENSABLE: "Error: illegal operands ")
+	sd f0, 48($fp) 		       #element se guarda en el frame en la posicion 48.                                                                (ERROR DE ENSABLE: "Error: illegal operands ")
 
 	addi t5, t5, 1		        #j++.
 
@@ -152,7 +152,7 @@ add_element:
 	lw  t0, 44($fp)            #cargo el puntero a la matrix_b en t0.
 	sll t8, t3, 2              #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_c->array.
 	add t0, t0, t8             #se desplaza el puntero al array de matriz_c->array
-	sd f0, 0(t0)               #guardo el valor de element f1 en matrix_c->array[i].
+	sd f0, 0(t0)               #guardo el valor de element f1 en matrix_c->array[i].                                                            (ERROR DE ENSABLE: "Error: illegal operands ")
 
 	addi t3, t3, 1		       #i++.
 
