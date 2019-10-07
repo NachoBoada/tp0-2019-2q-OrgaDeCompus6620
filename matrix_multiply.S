@@ -113,7 +113,7 @@ segundo_for:
 	lw  t0, 36($fp)             #cargo el puntero a la matrix_a (que es el mismo que matriz_a->rows) en t0.
 	sll t8, t8, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_a->array.
 	add t0, t0, t8              #se desplaza el puntero al array de matriz_a->array
-	ldc1 $f2, 0(t0)             #cargo el valor apuntado por matrix_a->array[aux1] en f2 porque el contenido ahora es un double.
+	l.d $f2, 0(t0)              #cargo el valor apuntado por matrix_a->array[aux1] en f2 porque el contenido ahora es un double.
 										 
 										 
 #(SE TRADUCE) aux2 = j*dimention;
@@ -130,7 +130,7 @@ segundo_for:
 	lw  t0, 40($fp)             #cargo el puntero a la matrix_b (que es el mismo que matriz_b->rows) en t0.
 	sll t7, t7, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_b->array.
     add t0, t0, t7              #se desplaza el puntero al array de matriz_b->array
-	ldc1 $f4, 0(t0)             #cargo el valor apuntado por matrix_b->array[aux2] en f4 porque el contenido ahora es un double.
+	l.d $f4, 0(t0)              #cargo el valor apuntado por matrix_b->array[aux2] en f4 porque el contenido ahora es un double.
 										 
 #(SE TRADUCE) aux1 = aux1 * aux2;
 
@@ -138,9 +138,9 @@ segundo_for:
 										 
 #(SE TRADUCE) element = element + aux1;
 
-	ldc1  $f0, 48($fp)         #cargo en f0 element, puede estar de mas dado que no veo que se modifique f0
+	l.d  $f0, 48($fp)          #cargo en f0 element, puede estar de mas dado que no veo que se modifique f0
 	add.d $f0,$f0,$f2          #element = element + aux1
-	swc1  $f0, 48($fp) 		   #element se guarda en el frame en la posicion 48.
+	s.d  $f0, 48($fp) 		   #element se guarda en el frame en la posicion 48.
 
 	addi t5, t5, 1		        #j++.
 
@@ -151,7 +151,7 @@ add_element:
 	lw   t0, 44($fp)           #cargo el puntero a la matrix_b en t0.
 	sll  t8, t3, 2             #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_c->array.
 	add  t0, t0, t8            #se desplaza el puntero al array de matriz_c->array
-	swc1 $f0, 0(t0)            #guardo el valor de element f0 en matrix_c->array[i].
+	s.d $f0, 0(t0)             #guardo el valor de element f0 en matrix_c->array[i].
 
 	addi t3, t3, 1		       #i++.
 

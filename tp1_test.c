@@ -68,8 +68,8 @@ char *readLine(FILE* fp){
     return str;
 }
 
-void readElementsInLine(int dimention, double array[]){
-    
+void readElementsInLine(int dimention, double* array){
+
     char* line = readLine(stdin);
     char* head_line_pointer = line;
 
@@ -82,23 +82,16 @@ void readElementsInLine(int dimention, double array[]){
     while (true)
     {
         returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
-        printf("hasta aca bien1\n");
         if (ferror(stdin) != 0){
             free(array);
             free(line);
             raiseError("SSCANF ERROR: I/O error");
         }
-        printf("returnvalue: %d\n",returnValue);
-        printf("x: %g\n",x);
-        printf("line: %s\n",line);
 
 
         if (returnValue == 1){
             head_line_pointer += offset;
-            printf("hasta aca bien2\n");
-            printf("array: %p\n",array);
             array[i] = (double)x;
-            printf("hasta aca bien3\n");
             i++;
             continue;
         }
@@ -148,18 +141,9 @@ double* readInput(int* dimention){
         raiseError("La dimension no es entera positiva");
     }
 
-    //ALLOCATE MEMORY FOR MATRICES INPUT ELEMENTS   
-    //(todo este quilombo aparentemente innecesario es para esquivar un error raro que al hacer
-    // un producto nos daba segementation fault
+    //ALLOCATE MEMORY FOR MATRICES INPUT ELEMENTS
     (*dimention) = (int)firstInputElement;
-    int dimentionValue = (*dimention);
-    int aux = (dimentionValue)*2*sizeof(double);
-    int amountToAllocate = 0;
-    int i;
-    for (i = 0; i < dimentionValue; i++){
-        amountToAllocate = amountToAllocate + aux;
-    }
-    array = malloc(amountToAllocate);
+    array = malloc(sizeof(double)*(*dimention)*(*dimention)*2);
 
     //CHECK IF ALLOCATION IS SUCCESSFULL
     if (array == NULL){
@@ -274,6 +258,7 @@ int main(int argc, const char* argv[]){
             raiseError("command parameter invalid");
         }
     }
+
     //MAIN PROGRAM
     while (!endProgram){
 
