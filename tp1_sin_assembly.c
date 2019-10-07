@@ -214,7 +214,32 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double
     }
 }
 
-matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b);
+matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
+
+    int dimention = matrix_a->rows;
+
+    matrix_t* matrix_c = create_matrix(dimention,dimention);
+
+    int row;
+    int column;
+    int i;
+    int j;
+    double element;
+
+    for (i = 0; i < dimention*dimention; i++){
+
+        row = (int)(i / dimention);
+        column = (int)(i % dimention);
+
+        element = 0;
+        for (j = 0; j < dimention; j++){
+
+            element += matrix_a->array[row*dimention + j] * matrix_b->array[j*dimention + column];
+        }
+        matrix_c->array[i] = element;
+    }
+    return matrix_c;
+}
 
 void print_matrix(FILE* out, matrix_t* matrix_m){
 

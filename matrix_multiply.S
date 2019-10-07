@@ -2,7 +2,7 @@
 
 	.text
     .abicalls
-    .align 2                    #QUIZAS HAYA QUE SACARLO Y QUIZAS SEA FUENTE DE ERRORES. TENER EN CUENTA
+    //.align 2                    #QUIZAS HAYA QUE SACARLO Y QUIZAS SEA FUENTE DE ERRORES. TENER EN CUENTA
 	.ent matrix_multiply
 	.globl matrix_multiply
 	
@@ -143,6 +143,7 @@ segundo_for:
 	s.d  $f0, 48($fp) 		   #element se guarda en el frame en la posicion 48.
 
 	addi t5, t5, 1		        #j++.
+    b segundo_for
 
 add_element:
 
@@ -154,6 +155,7 @@ add_element:
 	s.d $f0, 0(t0)             #guardo el valor de element f0 en matrix_c->array[i].
 
 	addi t3, t3, 1		       #i++.
+    b primer_for
 
 ##################################################
 
