@@ -139,7 +139,14 @@ segundo_for:
 	j segundo_for
 
 fin_segundo_for
-#aca va: matrix_c->array[i] = element;
+
+#(SE TRADUCE) matrix_c->array[i] = element;
+
+	lw t3,28($fp) #cargo el valor de i por las dudas --- puede ser redundante si no se modifica.
+	lw  t0, 44($fp) #cargo el puntero a la matrix_b en t0.
+	sll t0, t0, 2   #corro 4 bytes para apuntar a la direccion de matriz_b->rows.
+	sllv t0, t0, t3 #t3 tiene i desplazo por registro i
+	sd f1, 0(t0)    #guardo el valor de element f1 en matrix_c->array[i].
 
 		
     #aux1 = row*dimention;
