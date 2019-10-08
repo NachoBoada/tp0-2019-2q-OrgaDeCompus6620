@@ -1,0 +1,4 @@
+VERSION: 10.39
+
+CRITERIO:
+El primer numero de la version representa el numero de merges en git que hicimos desde un branch a master y el numero despues de la coma es la cantidad de commits hasta finalizado el tp1 desde el ultimo merge
