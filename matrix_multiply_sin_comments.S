@@ -1,6 +1,7 @@
 #include <mips/regdef.h>
 
 	.text
+    .extern create_matrix
     .abicalls
     //.align 2                    
 	.ent matrix_multiply
@@ -38,8 +39,8 @@ matrix_multiply:
 
     move a0, t1                 
     move a1, t1
-    .extern create_matrix	    
-    jal create_matrix 			
+    la t9, create_matrix	    
+    jal t9 			
     sw  v0, 44($fp)  		    
 
     li  t3, 0                   
@@ -70,8 +71,10 @@ segundo_for:
 
 	add t8, t8, t5            										 
 										
-	lw  t0, 36($fp)            
-	sll t8, t8, 2             
+	lw  t0, 36($fp)  
+    addi t0,t0,8
+    lw  t0, 0(t0)   
+	sll t8, t8, 2          
 	add t0, t0, t8           
 	l.d $f2, 0(t0)           
 
@@ -80,10 +83,12 @@ segundo_for:
 	lw t4, 20($fp)	           
 	add t7, t7, t4	          						 
 										
-	lw  t0, 40($fp)            
-	sll t7, t7, 2               
-    add t0, t0, t7          
-	l.d $f4, 0(t0)             
+	lw  t0, 40($fp)   
+    addi t0,t0,8   
+    lw  t0, 0(t0)
+	sll t7, t7, 2
+    add t0, t0, t7
+	l.d $f4, 0(t0)                         
 										
 	mul.d $f2, $f2, $f4        
 										
@@ -96,10 +101,12 @@ segundo_for:
 
 add_element:
 
-	lw   t0, 44($fp)           
-	sll  t8, t3, 2             
-	add  t0, t0, t8           
-	s.d $f0, 0(t0)            
+	lw  t0, 44($fp)        
+    addi t0,t0,8      
+    lw  t0, 0(t0)     
+	sll t8, t3, 2   
+	add  t0, t0, t8 
+	s.d $f0, 0(t0)          
 
 	addi t3, t3, 1
     b primer_for

@@ -1,6 +1,7 @@
 #include <mips/regdef.h>
 
 	.text
+    .extern create_matrix	    #para llamarla del codigo de C.
     .abicalls
     //.align 2                    #QUIZAS HAYA QUE SACARLO Y QUIZAS SEA FUENTE DE ERRORES. TENER EN CUENTA
 	.ent matrix_multiply
@@ -56,8 +57,8 @@ matrix_multiply:
 
     move a0, t1                 #se guarda dimention en los registros que se pasan por parametro a funcion
     move a1, t1
-    .extern create_matrix	    #para llamarla del codigo de C.
-    jal create_matrix 			#Llamo a la funcion
+    la t9, create_matrix	    
+    jal t9                      #Se llama a la funcion create_matrix
     sw  v0, 44($fp)  		    #Lo retornado por create_matrix se guarda en v0, y lo guardo en su posicion de memoria dentro del stack frame.
 
 #(SE TRADUCE) for (i = 0; i < dimention*dimention; i++);
@@ -110,8 +111,10 @@ segundo_for:
 										 
 #(SE TRADUCE) aux1 = matrix_a->array[aux1];
 
-	lw  t0, 36($fp)             #cargo el puntero a la matrix_a (que es el mismo que matriz_a->rows) en t0.
-	sll t8, t8, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_a->array.
+	lw  t0, 36($fp)             #me paro en matriz_a->rows  
+    addi t0,t0,8                #me paro en matriz_a->array    
+    lw  t0, 0(t0)               #cargo la direccion de comienzo del array de elementos de matriz_a 
+	sll t8, t8, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_a.
 	add t0, t0, t8              #se desplaza el puntero al array de matriz_a->array
 	l.d $f2, 0(t0)              #cargo el valor apuntado por matrix_a->array[aux1] en f2 porque el contenido ahora es un double.
 										 
@@ -127,8 +130,10 @@ segundo_for:
 										 
 #(SE TRADUCE) aux2 = matrix_b->array[aux2];
 
-	lw  t0, 40($fp)             #cargo el puntero a la matrix_b (que es el mismo que matriz_b->rows) en t0.
-	sll t7, t7, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_b->array.
+	lw  t0, 40($fp)             #me paro en matriz_b->rows  
+    addi t0,t0,8                #me paro en matriz_b->array    
+    lw  t0, 0(t0)               #cargo la direccion de comienzo del array de elementos de matriz_b 
+	sll t7, t7, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_b.
     add t0, t0, t7              #se desplaza el puntero al array de matriz_b->array
 	l.d $f4, 0(t0)              #cargo el valor apuntado por matrix_b->array[aux2] en f4 porque el contenido ahora es un double.
 										 
@@ -149,8 +154,10 @@ add_element:
 
 #(SE TRADUCE) matrix_c->array[i] = element;
 
-	lw   t0, 44($fp)           #cargo el puntero a la matrix_b en t0.
-	sll  t8, t3, 2             #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_c->array.
+	lw  t0, 44($fp)            #me paro en matriz_c->rows  
+    addi t0,t0,8               #me paro en matriz_c->array    
+    lw  t0, 0(t0)              #cargo la direccion de comienzo del array de elementos de matriz_c 
+	sll t8, t3, 2              #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_c.
 	add  t0, t0, t8            #se desplaza el puntero al array de matriz_c->array
 	s.d $f0, 0(t0)             #guardo el valor de element f0 en matrix_c->array[i].
 

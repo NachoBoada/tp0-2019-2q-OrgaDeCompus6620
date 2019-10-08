@@ -192,6 +192,14 @@ matrix_t* create_matrix(size_t rows, size_t cols){
     }
     matriz->rows = rows;
     matriz->cols = cols;
+    /*
+    printf("me llamaste y te devolvi una matriz en: %p\n",matriz);
+    printf("mi array esta en: %p\n",matriz->array);
+    printf("rows: %d\n",(int)matriz->rows);
+    printf("cols: %d\n",(int)matriz->cols);
+    printArray(rows*rows,matriz->array);
+    */
+
     return matriz;
 }
 
