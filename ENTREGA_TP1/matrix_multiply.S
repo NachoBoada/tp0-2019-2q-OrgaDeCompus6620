@@ -30,8 +30,6 @@ matrix_multiply:
 	sw	a0,56($fp)	            #Guarda puntero matrix_a en ABA de la caller (main)
 	sw	a1,60($fp)	            #Guarda puntero matrix_b en ABA de la caller (main)
 
-############    NACHO   ################
-
 #(SE TRADUCE) dimention = matrix_a->rows:
 
 #Se obtiene matriz_a->rows (dimention).
@@ -89,8 +87,6 @@ primer_for:
 
 segundo_for:
 	bge t5, t1, add_element     #si j>=dimention (t5 >= t1), va a add_elemt y termina for, sino hace otra iteracion.
-
-############ INICIO CODIGO MAURO ################
 
 #(SE TRADUCE) aux1 = row*dimention;
 
@@ -157,8 +153,6 @@ add_element:
 
 	addi t3, t3, 1		       #i++.
     b primer_for
-
-##################################################
 
 ret:
     lw v0,28($fp)

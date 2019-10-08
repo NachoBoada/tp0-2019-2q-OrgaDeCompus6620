@@ -8,11 +8,11 @@
 44  $fp
 40  gp
     ============================ LTA  
-36  element(2da parte)
+36  element(2da parte dado que es un double)
 32  element
 28  ptr_matrix_c
-24  row
-20  column
+24  row (es el row calculado en cada ciclo de for, no el row de los structs)
+20  column (es el column calculado en cada ciclo de for, no el column de los structs)
 16  dimention
     ============================ ABA
 12  <nada, se pone por convencion>
