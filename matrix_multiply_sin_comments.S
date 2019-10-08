@@ -2,35 +2,26 @@
 
 	.text
     .extern create_matrix
-    .abicalls
-    //.align 2                    
+    .abicalls                   
 	.ent matrix_multiply
 	.globl matrix_multiply
 	
 matrix_multiply:	
 
-	.frame 	$fp,88,ra
-
-	#.set	noreorder	        
-	#.cpload t9		            
-	#.set	reorder		        
-
-	subu 	sp,sp,88
+	.frame 	$fp,56,ra	        
+	subu 	sp,sp,56
 
 
-    sw	ra,80(sp)
-	.cprestore 72 
-	sw	$fp,76(sp)	
+    sw	ra,48(sp)
+	.cprestore 40 
+	sw	$fp,44(sp)	
 	move	$fp,sp
 
 
-	sw	a0,88($fp)	            
-	sw	a1,92($fp)	            
+	sw	a0,56($fp)	            
+	sw	a1,60($fp)	                      
 
-	sw	a0,36($fp)	            
-	sw	a1,40($fp)	            
-
-    lw  t0, 36($fp)             
+    lw  t0, 56($fp)             
     lw  t1, 0(t0)               
     sw  t1, 16($fp)	            
 
@@ -41,7 +32,7 @@ matrix_multiply:
     move a1, t1
     la t9, create_matrix	    
     jal t9 			
-    sw  v0, 44($fp)  		    
+    sw  v0, 28($fp)  		    
 
     li  t3, 0                   
     lw  t1, 16($fp) 	        
@@ -57,8 +48,8 @@ primer_for:
 	sw   t4, 20($fp)		 
 
     li  t0, 0
-    sw  t0, 48($fp) 		    
-    sw  t0, 52($fp) 		   
+    sw  t0, 32($fp) 		    
+    sw  t0, 36($fp) 		   
 
 	li t5, 0			     
 
@@ -71,10 +62,10 @@ segundo_for:
 
 	add t8, t8, t5            										 
 										
-	lw  t0, 36($fp)  
+	lw  t0, 56($fp)  
     addi t0,t0,8
     lw  t0, 0(t0)   
-	sll t8, t8, 2          
+	sll t8, t8, 3          
 	add t0, t0, t8           
 	l.d $f2, 0(t0)           
 
@@ -83,18 +74,18 @@ segundo_for:
 	lw t4, 20($fp)	           
 	add t7, t7, t4	          						 
 										
-	lw  t0, 40($fp)   
+	lw  t0, 60($fp)   
     addi t0,t0,8   
     lw  t0, 0(t0)
-	sll t7, t7, 2
+	sll t7, t7, 3
     add t0, t0, t7
 	l.d $f4, 0(t0)                         
 										
 	mul.d $f2, $f2, $f4        
 										
-	l.d  $f0, 48($fp)         
+	l.d  $f0, 32($fp)         
 	add.d $f0,$f0,$f2         
-	s.d  $f0, 48($fp)
+	s.d  $f0, 32($fp)
 
 		  
 
@@ -103,24 +94,24 @@ segundo_for:
 
 add_element:
 
-	lw  t0, 44($fp)        
+	lw  t0, 28($fp)        
     addi t0,t0,8      
     lw  t0, 0(t0)     
-	sll t8, t3, 2   
+	sll t8, t3, 3   
 	add t0, t0, t8 
-    l.d $f0, 48($fp)
+    l.d $f0, 32($fp)
 	s.d $f0, 0(t0) 
 
 	addi t3, t3, 1
     b primer_for
 
 ret:
-    lw v0,44($fp)
+    lw v0,28($fp)
 
 fin:	
-    lw	ra,80(sp)
-	lw	$fp,76(sp)
-	addu sp,sp,88
+    lw	ra,48(sp)
+	lw	$fp,44(sp)
+	addu sp,sp,56
 
 	jr	ra
 	.end 	matrix_multiply

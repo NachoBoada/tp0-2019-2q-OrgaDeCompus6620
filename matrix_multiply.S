@@ -3,7 +3,6 @@
 	.text
     .extern create_matrix	    #para llamarla del codigo de C.
     .abicalls
-    //.align 2                    #QUIZAS HAYA QUE SACARLO Y QUIZAS SEA FUENTE DE ERRORES. TENER EN CUENTA
 	.ent matrix_multiply
 	.globl matrix_multiply
 	
@@ -11,30 +10,25 @@ matrix_multiply:
 
 #Se crea stack frame de la callee
 
-	.frame 	$fp,88,ra
+	.frame 	$fp,56,ra
 
 	#.set	noreorder	        # apaga reordenamiento de instrucciones
 	#.cpload t9		            # directiva usada para codigo PIC
 	#.set	reorder		        # enciende reordenamiento de instrucciones
 
-	subu 	sp,sp,88
+	subu 	sp,sp,56
 
 #Se crea SRA de la callee
 
-    sw	ra,80(sp)
-	.cprestore 72 
-	sw	$fp,76(sp)	
+    sw	ra,48(sp)
+	.cprestore 40 
+	sw	$fp,44(sp)	
 	move	$fp,sp
 
 #Se crea ABA de la caller
 
-	sw	a0,88($fp)	            #Guarda puntero matrix_a en ABA de la caller (main)
-	sw	a1,92($fp)	            #Guarda puntero matrix_b en ABA de la caller (main)
-
-#Se agrega en LTA de la callee
-
-	sw	a0,36($fp)	            #Guarda puntero matrix_a en LTA de la callee
-	sw	a1,40($fp)	            #Guarda puntero matrix_b en LTA de la callee
+	sw	a0,56($fp)	            #Guarda puntero matrix_a en ABA de la caller (main)
+	sw	a1,60($fp)	            #Guarda puntero matrix_b en ABA de la caller (main)
 
 ############    NACHO   ################
 
@@ -42,7 +36,7 @@ matrix_multiply:
 
 #Se obtiene matriz_a->rows (dimention).
 
-    lw  t0, 36($fp)             #se carga el puntero a la matrix_a (que es el mismo que matriz_a->rows) en t0.
+    lw  t0, 56($fp)             #se carga el puntero a la matrix_a (que es el mismo que matriz_a->rows) en t0.
     lw  t1, 0(t0)               #se carga el valor apuntado por matriz_a->rows en t1 (dimention).
     sw  t1, 16($fp)	            #se guarda dimention en la LTA de la callee
 
@@ -59,7 +53,7 @@ matrix_multiply:
     move a1, t1
     la t9, create_matrix	    
     jal t9                      #Se llama a la funcion create_matrix
-    sw  v0, 44($fp)  		    #Lo retornado por create_matrix se guarda en v0, y lo guardo en su posicion de memoria dentro del stack frame.
+    sw  v0, 28($fp)  		    #Lo retornado por create_matrix se guarda en v0, y lo guardo en su posicion de memoria dentro del stack frame.
 
 #(SE TRADUCE) for (i = 0; i < dimention*dimention; i++);
 
@@ -74,7 +68,7 @@ primer_for:
 
 #(SE TRADUCE) row = (int)(i / dimention);
 
-	divu t0, t3, t1 	        #t0 = (i / dimention).                                                                                          (OJO! "capaz que habria que tener en cuenta lo de LO/HI")
+	divu t0, t3, t1 	        #t0 = (i / dimention).                                                                                         
 	sw   t0, 24($fp)	        #row esta en 24($fp), entonces queda row = (int)(i / dimention).
 
 #(SE TRADUCE) column = (int)(i % dimention);
@@ -86,8 +80,8 @@ primer_for:
 #(SE TRADUCE) element = 0;
     
     li  t0, 0
-    sw  t0, 48($fp) 		    #element es 48($fp) por lo que aca se hace element = 0;
-    sw  t0, 52($fp) 		    #como element es un double tambien se debe hacer cero 4 bytes arrbia de su cominezo en 52($fp)
+    sw  t0, 32($fp) 		    #element es 32($fp) por lo que aca se hace element = 0;
+    sw  t0, 36($fp) 		    #como element es un double tambien se debe hacer cero 4 bytes arrbia de su cominezo en 36($fp)
 
 #(SE TRADUCE) for (j = 0; j < dimention; j++):;
 
@@ -110,7 +104,7 @@ segundo_for:
 										 
 #(SE TRADUCE) aux1 = matrix_a->array[aux1];
 
-	lw  t0, 36($fp)             #me paro en matriz_a->rows  
+	lw  t0, 56($fp)             #me paro en matriz_a->rows  
     addi t0,t0,8                #me paro en matriz_a->array    
     lw  t0, 0(t0)               #cargo la direccion de comienzo del array de elementos de matriz_a 
 	sll t8, t8, 3               #multiplico por 8 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_a.
@@ -129,7 +123,7 @@ segundo_for:
 										 
 #(SE TRADUCE) aux2 = matrix_b->array[aux2];
 
-	lw  t0, 40($fp)             #me paro en matriz_b->rows  
+	lw  t0, 60($fp)             #me paro en matriz_b->rows  
     addi t0,t0,8                #me paro en matriz_b->array    
     lw  t0, 0(t0)               #cargo la direccion de comienzo del array de elementos de matriz_b 
 	sll t7, t7, 3               #multiplico por 8 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_b.
@@ -142,9 +136,9 @@ segundo_for:
 										 
 #(SE TRADUCE) element = element + aux1;
 
-	l.d  $f0, 48($fp)          #cargo en f0 element, puede estar de mas dado que no veo que se modifique f0
+	l.d  $f0, 32($fp)          #cargo en f0 element, puede estar de mas dado que no veo que se modifique f0
 	add.d $f0,$f0,$f2          #element = element + aux1
-	s.d  $f0, 48($fp) 		   #element se guarda en el frame en la posicion 48.
+	s.d  $f0, 32($fp) 		   #element se guarda en el frame en la posicion 32.
 
 	addi t5, t5, 1		        #j++.
     b segundo_for
@@ -153,12 +147,12 @@ add_element:
 
 #(SE TRADUCE) matrix_c->array[i] = element;
 
-	lw  t0, 44($fp)            #me paro en matriz_c->rows  
+	lw  t0, 28($fp)            #me paro en matriz_c->rows  
     addi t0,t0,8               #me paro en matriz_c->array    
     lw  t0, 0(t0)              #cargo la direccion de comienzo del array de elementos de matriz_c 
 	sll t8, t3, 3              #multiplico por 8 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_c.
 	add  t0, t0, t8            #se desplaza el puntero al array de matriz_c->array
-    l.d $f0, 48($fp)
+    l.d $f0, 32($fp)
 	s.d $f0, 0(t0)             #guardo el valor de element f0 en matrix_c->array[i].
 
 	addi t3, t3, 1		       #i++.
@@ -167,12 +161,12 @@ add_element:
 ##################################################
 
 ret:
-    lw v0,44($fp)
+    lw v0,28($fp)
 
 fin:	
-    lw	ra,80(sp)
-	lw	$fp,76(sp)
-	addu sp,sp,88
+    lw	ra,48(sp)
+	lw	$fp,44(sp)
+	addu sp,sp,56
 
 	jr	ra
 	.end 	matrix_multiply

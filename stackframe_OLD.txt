@@ -1,0 +1,56 @@
+    ===================================================== STACK FRAME de MAIN
+92 ptr_matrix_b
+88 ptr_matrix_a
+    ===================================================== STACK FRAME de Multiply
+    ============================ SRA
+84  <padding>
+80  ra
+76  $fp
+72  gp
+    ============================ LTA  
+68  aux2(2da parte) (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+64  aux2            (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+60  aux1(2da parte) (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+56  aux1            (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+52  element(2da parte)
+48  element
+44  ptr_matrix_c
+40  ptr_matrix_b    (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+36  ptr_matrix_a    (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+32  j               (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+28  i               (BORRAR AL FINAL DE TODO Y RENOMBRAR POSICIONES DE MEMORIA EN STACK FRAME)
+24  row
+20  column
+16  dimention
+    ============================ ABA
+12  <nada, se pone por convencion>
+8   <nada, se pone por convencion>
+4   dimention
+0   dimention
+
+
+
+
+
+
+    ===================================================== STACK FRAME de MAIN
+60 ptr_matrix_b
+56 ptr_matrix_a
+    ===================================================== STACK FRAME de Multiply
+    ============================ SRA
+52  <padding>
+48  ra
+44  $fp
+40  gp
+    ============================ LTA  
+36  element(2da parte)
+32  element
+28  ptr_matrix_c
+24  row
+20  column
+16  dimention
+    ============================ ABA
+12  <nada, se pone por convencion>
+8   <nada, se pone por convencion>
+4   dimention
+0   dimention
