@@ -113,7 +113,7 @@ segundo_for:
 	lw  t0, 36($fp)             #me paro en matriz_a->rows  
     addi t0,t0,8                #me paro en matriz_a->array    
     lw  t0, 0(t0)               #cargo la direccion de comienzo del array de elementos de matriz_a 
-	sll t8, t8, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_a.
+	sll t8, t8, 3               #multiplico por 8 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_a.
 	add t0, t0, t8              #se desplaza el puntero al array de matriz_a->array
 	l.d $f2, 0(t0)              #cargo el valor apuntado por matrix_a->array[aux1] en f2 porque el contenido ahora es un double.
 										 
@@ -132,7 +132,7 @@ segundo_for:
 	lw  t0, 40($fp)             #me paro en matriz_b->rows  
     addi t0,t0,8                #me paro en matriz_b->array    
     lw  t0, 0(t0)               #cargo la direccion de comienzo del array de elementos de matriz_b 
-	sll t7, t7, 2               #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_b.
+	sll t7, t7, 3               #multiplico por 8 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_b.
     add t0, t0, t7              #se desplaza el puntero al array de matriz_b->array
 	l.d $f4, 0(t0)              #cargo el valor apuntado por matrix_b->array[aux2] en f4 porque el contenido ahora es un double.
 										 
@@ -156,8 +156,9 @@ add_element:
 	lw  t0, 44($fp)            #me paro en matriz_c->rows  
     addi t0,t0,8               #me paro en matriz_c->array    
     lw  t0, 0(t0)              #cargo la direccion de comienzo del array de elementos de matriz_c 
-	sll t8, t3, 2              #multiplico por 4 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_c.
+	sll t8, t3, 3              #multiplico por 8 para que equivalga a la cantidad de bytes a desplazar el puntero al array de matriz_c.
 	add  t0, t0, t8            #se desplaza el puntero al array de matriz_c->array
+    l.d $f0, 48($fp)
 	s.d $f0, 0(t0)             #guardo el valor de element f0 en matrix_c->array[i].
 
 	addi t3, t3, 1		       #i++.

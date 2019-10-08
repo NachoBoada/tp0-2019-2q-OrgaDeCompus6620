@@ -94,7 +94,9 @@ segundo_for:
 										
 	l.d  $f0, 48($fp)         
 	add.d $f0,$f0,$f2         
-	s.d  $f0, 48($fp) 		  
+	s.d  $f0, 48($fp)
+
+		  
 
 	addi t5, t5, 1	
     b segundo_for	        
@@ -105,8 +107,9 @@ add_element:
     addi t0,t0,8      
     lw  t0, 0(t0)     
 	sll t8, t3, 2   
-	add  t0, t0, t8 
-	s.d $f0, 0(t0)          
+	add t0, t0, t8 
+    l.d $f0, 48($fp)
+	s.d $f0, 0(t0) 
 
 	addi t3, t3, 1
     b primer_for
