@@ -192,13 +192,6 @@ matrix_t* create_matrix(size_t rows, size_t cols){
     }
     matriz->rows = rows;
     matriz->cols = cols;
-    /*
-    printf("me llamaste y te devolvi una matriz en: %p\n",matriz);
-    printf("mi array esta en: %p\n",matriz->array);
-    printf("rows: %d\n",(int)matriz->rows);
-    printf("cols: %d\n",(int)matriz->cols);
-    printArray(rows*rows,matriz->array);
-    */
 
     return matriz;
 }
@@ -280,12 +273,7 @@ int main(int argc, const char* argv[]){
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
 
         matrix_c = matrix_multiply(matrix_a,matrix_b);
-
-        printf("rows: %d\n",(int)matrix_c->rows);
-        printf("cols: %d\n",(int)matrix_c->cols);
-        printArray(dimention*dimention,matrix_c->array);
-
-        //print_matrix(OUT,matrix_c);
+        print_matrix(OUT,matrix_c);
 
         destroy_matrix(matrix_a);
         destroy_matrix(matrix_b);
