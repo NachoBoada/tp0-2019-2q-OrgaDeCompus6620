@@ -10,6 +10,27 @@
 	.size	input, 4
 input:
 	.space	4
+	.globl	matrix_a
+	.globl	matrix_a
+	.align	2
+	.type	matrix_a, @object
+	.size	matrix_a, 4
+matrix_a:
+	.space	4
+	.globl	matrix_b
+	.globl	matrix_b
+	.align	2
+	.type	matrix_b, @object
+	.size	matrix_b, 4
+matrix_b:
+	.space	4
+	.globl	matrix_c
+	.globl	matrix_c
+	.align	2
+	.type	matrix_c, @object
+	.size	matrix_c, 4
+matrix_c:
+	.space	4
 	.text
 	.align	2
 	.globl	freeInputArray
@@ -94,6 +115,40 @@ $L19:
 	j	$ra
 	.end	printArray
 	.size	printArray, .-printArray
+	.align	2
+	.globl	destroy_matrix
+	.ent	destroy_matrix
+destroy_matrix:
+	.frame	$fp,40,$ra		# vars= 0, regs= 3/0, args= 16, extra= 8
+	.mask	0xd0000000,-8
+	.fmask	0x00000000,0
+	.set	noreorder
+	.cpload	$t9
+	.set	reorder
+	subu	$sp,$sp,40
+	.cprestore 16
+	sw	$ra,32($sp)
+	sw	$fp,28($sp)
+	sw	$gp,24($sp)
+	move	$fp,$sp
+	sw	$a0,40($fp)
+	lw	$v0,40($fp)
+	beq	$v0,$zero,$L24
+	lw	$v0,40($fp)
+	lw	$a0,8($v0)
+	la	$t9,free
+	jal	$ra,$t9
+	lw	$a0,40($fp)
+	la	$t9,free
+	jal	$ra,$t9
+$L24:
+	move	$sp,$fp
+	lw	$ra,32($sp)
+	lw	$fp,28($sp)
+	addu	$sp,$sp,40
+	j	$ra
+	.end	destroy_matrix
+	.size	destroy_matrix, .-destroy_matrix
 	.rdata
 	.align	2
 $LC1:
@@ -143,6 +198,15 @@ raiseError:
 	la	$a1,$LC1
 	la	$t9,fprintf
 	jal	$ra,$t9
+	lw	$a0,matrix_a
+	la	$t9,destroy_matrix
+	jal	$ra,$t9
+	lw	$a0,matrix_b
+	la	$t9,destroy_matrix
+	jal	$ra,$t9
+	lw	$a0,matrix_c
+	la	$t9,destroy_matrix
+	jal	$ra,$t9
 	la	$t9,freeInputArray
 	jal	$ra,$t9
 	li	$a0,1			# 0x1
@@ -154,6 +218,9 @@ raiseError:
 	.align	2
 $LC4:
 	.ascii	"FGETC ERROR: I/O error\000"
+	.align	2
+$LC5:
+	.ascii	"REALLOC ERROR: null pointer returned\000"
 	.text
 	.align	2
 	.globl	readLine
@@ -181,27 +248,27 @@ readLine:
 	jal	$ra,$t9
 	sw	$v0,28($fp)
 	lw	$v0,28($fp)
-	bne	$v0,$zero,$L26
+	bne	$v0,$zero,$L28
 	lw	$v0,28($fp)
 	sw	$v0,40($fp)
-	b	$L25
-$L26:
+	b	$L27
+$L28:
 	.set	noreorder
 	nop
 	.set	reorder
-$L27:
+$L29:
 	lw	$a0,64($fp)
 	la	$t9,fgetc
 	jal	$ra,$t9
 	sw	$v0,32($fp)
 	lw	$v1,32($fp)
 	li	$v0,-1			# 0xffffffffffffffff
-	beq	$v1,$v0,$L28
+	beq	$v1,$v0,$L30
 	lw	$v1,32($fp)
 	li	$v0,10			# 0xa
-	bne	$v1,$v0,$L29
-	b	$L28
-$L29:
+	bne	$v1,$v0,$L31
+	b	$L30
+$L31:
 	addu	$a1,$fp,36
 	lw	$v1,0($a1)
 	move	$a0,$v1
@@ -213,7 +280,7 @@ $L29:
 	sw	$v1,0($a1)
 	lw	$v1,36($fp)
 	lw	$v0,24($fp)
-	bne	$v1,$v0,$L27
+	bne	$v1,$v0,$L29
 	lw	$v0,24($fp)
 	addu	$v0,$v0,16
 	sw	$v0,24($fp)
@@ -223,22 +290,22 @@ $L29:
 	jal	$ra,$t9
 	sw	$v0,28($fp)
 	lw	$v0,28($fp)
-	bne	$v0,$zero,$L27
+	bne	$v0,$zero,$L29
 	lw	$v0,28($fp)
 	sw	$v0,40($fp)
-	b	$L25
-$L28:
+	b	$L27
+$L30:
 	lhu	$v0,__sF+12
 	srl	$v0,$v0,6
 	andi	$v0,$v0,0x1
-	beq	$v0,$zero,$L33
+	beq	$v0,$zero,$L35
 	lw	$a0,28($fp)
 	la	$t9,free
 	jal	$ra,$t9
 	la	$a0,$LC4
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L33:
+$L35:
 	addu	$a1,$fp,36
 	lw	$v1,0($a1)
 	move	$a0,$v1
@@ -253,8 +320,14 @@ $L33:
 	jal	$ra,$t9
 	sw	$v0,28($fp)
 	lw	$v0,28($fp)
+	bne	$v0,$zero,$L36
+	la	$a0,$LC5
+	la	$t9,raiseError
+	jal	$ra,$t9
+$L36:
+	lw	$v0,28($fp)
 	sw	$v0,40($fp)
-$L25:
+$L27:
 	lw	$v0,40($fp)
 	move	$sp,$fp
 	lw	$ra,56($sp)
@@ -265,17 +338,21 @@ $L25:
 	.size	readLine, .-readLine
 	.rdata
 	.align	2
-$LC5:
+$LC6:
 	.ascii	"%g%n\000"
 	.align	2
-$LC6:
+$LC7:
 	.ascii	"SSCANF ERROR: I/O error\000"
 	.align	2
-$LC7:
-	.ascii	"No coincide dimension con cantidad de elementos ingresad"
-	.ascii	"os\000"
-	.align	2
 $LC8:
+	.ascii	"La cantidad de numeros es mayor a lo especificado segun "
+	.ascii	"la dimension\000"
+	.align	2
+$LC9:
+	.ascii	"La cantidad de numeros es menor a lo especificado segun "
+	.ascii	"la dimension\000"
+	.align	2
+$LC10:
 	.ascii	"Input no numerico\000"
 	.text
 	.align	2
@@ -303,11 +380,12 @@ readElementsInLine:
 	lw	$v0,24($fp)
 	sw	$v0,28($fp)
 	sw	$zero,40($fp)
-$L35:
+	sw	$zero,48($fp)
+$L38:
 	addu	$v0,$fp,32
 	addu	$v1,$fp,36
 	lw	$a0,28($fp)
-	la	$a1,$LC5
+	la	$a1,$LC6
 	move	$a2,$v0
 	move	$a3,$v1
 	la	$t9,sscanf
@@ -316,20 +394,20 @@ $L35:
 	lhu	$v0,__sF+12
 	srl	$v0,$v0,6
 	andi	$v0,$v0,0x1
-	beq	$v0,$zero,$L38
+	beq	$v0,$zero,$L41
 	lw	$a0,76($fp)
 	la	$t9,free
 	jal	$ra,$t9
 	lw	$a0,24($fp)
 	la	$t9,free
 	jal	$ra,$t9
-	la	$a0,$LC6
+	la	$a0,$LC7
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L38:
+$L41:
 	lw	$v1,44($fp)
 	li	$v0,1			# 0x1
-	bne	$v1,$v0,$L39
+	bne	$v1,$v0,$L42
 	lw	$v1,28($fp)
 	lw	$v0,36($fp)
 	addu	$v0,$v1,$v0
@@ -344,34 +422,14 @@ $L38:
 	lw	$v0,40($fp)
 	addu	$v0,$v0,1
 	sw	$v0,40($fp)
-	b	$L35
-$L39:
-	lw	$v1,44($fp)
-	li	$v0,-1			# 0xffffffffffffffff
-	bne	$v1,$v0,$L40
-	lw	$v0,40($fp)
-	sw	$v0,48($fp)
 	lw	$v1,72($fp)
 	lw	$v0,72($fp)
 	mult	$v1,$v0
 	mflo	$v0
 	sll	$v1,$v0,1
-	lw	$v0,48($fp)
-	beq	$v0,$v1,$L34
-	lw	$a0,76($fp)
-	la	$t9,free
-	jal	$ra,$t9
-	lw	$a0,24($fp)
-	la	$t9,free
-	jal	$ra,$t9
-	la	$a0,$LC7
-	la	$t9,raiseError
-	jal	$ra,$t9
-	b	$L34
-$L40:
-	lw	$v1,44($fp)
-	li	$v0,1			# 0x1
-	beq	$v1,$v0,$L35
+	lw	$v0,40($fp)
+	slt	$v0,$v1,$v0
+	beq	$v0,$zero,$L38
 	lw	$a0,76($fp)
 	la	$t9,free
 	jal	$ra,$t9
@@ -381,7 +439,44 @@ $L40:
 	la	$a0,$LC8
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L34:
+	b	$L38
+$L42:
+	lw	$v1,44($fp)
+	li	$v0,-1			# 0xffffffffffffffff
+	bne	$v1,$v0,$L44
+	lw	$v0,40($fp)
+	sw	$v0,48($fp)
+	lw	$v1,72($fp)
+	lw	$v0,72($fp)
+	mult	$v1,$v0
+	mflo	$v0
+	sll	$v1,$v0,1
+	lw	$v0,48($fp)
+	beq	$v0,$v1,$L37
+	lw	$a0,76($fp)
+	la	$t9,free
+	jal	$ra,$t9
+	lw	$a0,24($fp)
+	la	$t9,free
+	jal	$ra,$t9
+	la	$a0,$LC9
+	la	$t9,raiseError
+	jal	$ra,$t9
+	b	$L37
+$L44:
+	lw	$v1,44($fp)
+	li	$v0,1			# 0x1
+	beq	$v1,$v0,$L38
+	lw	$a0,76($fp)
+	la	$t9,free
+	jal	$ra,$t9
+	lw	$a0,24($fp)
+	la	$t9,free
+	jal	$ra,$t9
+	la	$a0,$LC10
+	la	$t9,raiseError
+	jal	$ra,$t9
+$L37:
 	move	$sp,$fp
 	lw	$ra,64($sp)
 	lw	$fp,60($sp)
@@ -391,19 +486,19 @@ $L34:
 	.size	readElementsInLine, .-readElementsInLine
 	.rdata
 	.align	2
-$LC9:
+$LC11:
 	.ascii	"%g\000"
 	.align	2
-$LC10:
+$LC12:
 	.ascii	"FSCANF ERROR: I/O error\000"
 	.align	2
-$LC11:
+$LC13:
 	.ascii	"Dimension no numerica\000"
 	.align	2
-$LC12:
+$LC14:
 	.ascii	"La dimension no es entera positiva\000"
 	.align	2
-$LC13:
+$LC15:
 	.ascii	"No se pudo allocar memoria para inputs\000"
 	.text
 	.align	2
@@ -424,34 +519,34 @@ readInput:
 	move	$fp,$sp
 	sw	$a0,56($fp)
 	la	$a0,__sF
-	la	$a1,$LC9
+	la	$a1,$LC11
 	addu	$a2,$fp,24
 	la	$t9,fscanf
 	jal	$ra,$t9
 	sw	$v0,32($fp)
 	lw	$v1,32($fp)
 	li	$v0,-1			# 0xffffffffffffffff
-	bne	$v1,$v0,$L44
+	bne	$v1,$v0,$L48
 	lhu	$v0,__sF+12
 	srl	$v0,$v0,6
 	andi	$v0,$v0,0x1
-	beq	$v0,$zero,$L45
-	la	$a0,$LC10
+	beq	$v0,$zero,$L49
+	la	$a0,$LC12
 	la	$t9,raiseError
 	jal	$ra,$t9
-	b	$L44
-$L45:
+	b	$L48
+$L49:
 	move	$a0,$zero
 	la	$t9,exit
 	jal	$ra,$t9
-$L44:
+$L48:
 	lw	$v1,32($fp)
 	li	$v0,1			# 0x1
-	beq	$v1,$v0,$L47
-	la	$a0,$LC11
+	beq	$v1,$v0,$L51
+	la	$a0,$LC13
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L47:
+$L51:
 	l.s	$f0,24($fp)
 	trunc.w.s $f0,$f0,$v0
 	cvt.s.w	$f2,$f0
@@ -461,17 +556,17 @@ $L47:
 	l.s	$f2,36($fp)
 	mtc1	$zero,$f0
 	c.lt.s	$f0,$f2
-	bc1t	$L49
+	bc1t	$L53
 	l.s	$f2,24($fp)
 	mtc1	$zero,$f0
 	c.le.s	$f2,$f0
-	bc1t	$L49
-	b	$L48
-$L49:
-	la	$a0,$LC12
+	bc1t	$L53
+	b	$L52
+$L53:
+	la	$a0,$LC14
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L48:
+$L52:
 	lw	$v0,56($fp)
 	l.s	$f0,24($fp)
 	trunc.w.s $f0,$f0,$v1
@@ -488,11 +583,11 @@ $L48:
 	jal	$ra,$t9
 	sw	$v0,28($fp)
 	lw	$v0,28($fp)
-	bne	$v0,$zero,$L50
-	la	$a0,$LC13
+	bne	$v0,$zero,$L54
+	la	$a0,$LC15
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L50:
+$L54:
 	lw	$v0,56($fp)
 	lw	$a0,0($v0)
 	lw	$a1,28($fp)
@@ -508,23 +603,23 @@ $L50:
 	.size	readInput, .-readInput
 	.rdata
 	.align	2
-$LC14:
+$LC16:
 	.ascii	"\000"
 	.space	99
 	.align	2
-$LC15:
+$LC17:
 	.ascii	"./\000"
 	.align	2
-$LC16:
+$LC18:
 	.ascii	"r\000"
 	.align	2
-$LC17:
+$LC19:
 	.ascii	"no se pudo abrir archivo de salida\000"
 	.align	2
-$LC18:
+$LC20:
 	.ascii	"%c\000"
 	.align	2
-$LC19:
+$LC21:
 	.ascii	"FPRINTF ERROR: I/O error\000"
 	.text
 	.align	2
@@ -545,7 +640,7 @@ outputFile:
 	move	$fp,$sp
 	sw	$a0,160($fp)
 	sw	$a1,164($fp)
-	lbu	$v0,$LC14
+	lbu	$v0,$LC16
 	sb	$v0,24($fp)
 	addu	$v0,$fp,25
 	li	$v1,99			# 0x63
@@ -555,7 +650,7 @@ outputFile:
 	la	$t9,memset
 	jal	$ra,$t9
 	addu	$a0,$fp,24
-	la	$a1,$LC15
+	la	$a1,$LC17
 	la	$t9,strcat
 	jal	$ra,$t9
 	addu	$a0,$fp,24
@@ -563,37 +658,37 @@ outputFile:
 	la	$t9,strcat
 	jal	$ra,$t9
 	addu	$a0,$fp,24
-	la	$a1,$LC16
+	la	$a1,$LC18
 	la	$t9,fopen
 	jal	$ra,$t9
 	sw	$v0,132($fp)
 	lw	$v0,132($fp)
-	bne	$v0,$zero,$L52
-	la	$a0,$LC17
+	bne	$v0,$zero,$L56
+	la	$a0,$LC19
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L52:
+$L56:
 	.set	noreorder
 	nop
 	.set	reorder
-$L53:
+$L57:
 	lb	$v1,136($fp)
 	li	$v0,-1			# 0xffffffffffffffff
-	bne	$v1,$v0,$L55
-	b	$L54
-$L55:
+	bne	$v1,$v0,$L59
+	b	$L58
+$L59:
 	lw	$v1,132($fp)
 	lw	$v0,132($fp)
 	lw	$v0,4($v0)
 	addu	$v0,$v0,-1
 	sw	$v0,4($v1)
-	bgez	$v0,$L56
+	bgez	$v0,$L60
 	lw	$a0,132($fp)
 	la	$t9,__srget
 	jal	$ra,$t9
 	sb	$v0,137($fp)
-	b	$L57
-$L56:
+	b	$L61
+$L60:
 	lw	$v0,132($fp)
 	lw	$v1,0($v0)
 	move	$a0,$v1
@@ -601,31 +696,31 @@ $L56:
 	sb	$a0,137($fp)
 	addu	$v1,$v1,1
 	sw	$v1,0($v0)
-$L57:
+$L61:
 	lbu	$v0,137($fp)
 	sb	$v0,136($fp)
 	lb	$v0,136($fp)
 	lw	$a0,160($fp)
-	la	$a1,$LC18
+	la	$a1,$LC20
 	move	$a2,$v0
 	la	$t9,fprintf
 	jal	$ra,$t9
 	sw	$v0,128($fp)
 	lw	$v0,128($fp)
-	bgez	$v0,$L53
-	la	$a0,$LC19
+	bgez	$v0,$L57
+	la	$a0,$LC21
 	la	$t9,raiseError
 	jal	$ra,$t9
-	b	$L53
-$L54:
+	b	$L57
+$L58:
 	lhu	$v0,__sF+12
 	srl	$v0,$v0,6
 	andi	$v0,$v0,0x1
-	beq	$v0,$zero,$L51
+	beq	$v0,$zero,$L55
 	la	$a0,$LC4
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L51:
+$L55:
 	move	$sp,$fp
 	lw	$ra,152($sp)
 	lw	$fp,148($sp)
@@ -635,10 +730,10 @@ $L51:
 	.size	outputFile, .-outputFile
 	.rdata
 	.align	2
-$LC20:
+$LC22:
 	.ascii	"no se pudo allocar memoria para matriz\000"
 	.align	2
-$LC21:
+$LC23:
 	.ascii	"no se pudo allocar memoria para elementos de matriz\000"
 	.text
 	.align	2
@@ -665,11 +760,11 @@ create_matrix:
 	jal	$ra,$t9
 	sw	$v0,24($fp)
 	lw	$v0,24($fp)
-	bne	$v0,$zero,$L61
-	la	$a0,$LC20
+	bne	$v0,$zero,$L65
+	la	$a0,$LC22
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L61:
+$L65:
 	lw	$s0,24($fp)
 	lw	$v1,52($fp)
 	lw	$v0,48($fp)
@@ -682,14 +777,14 @@ $L61:
 	sw	$v0,8($s0)
 	lw	$v0,24($fp)
 	lw	$v0,8($v0)
-	bne	$v0,$zero,$L62
+	bne	$v0,$zero,$L66
 	lw	$a0,24($fp)
 	la	$t9,free
 	jal	$ra,$t9
-	la	$a0,$LC21
+	la	$a0,$LC23
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L62:
+$L66:
 	lw	$v1,24($fp)
 	lw	$v0,48($fp)
 	sw	$v0,0($v1)
@@ -705,40 +800,6 @@ $L62:
 	j	$ra
 	.end	create_matrix
 	.size	create_matrix, .-create_matrix
-	.align	2
-	.globl	destroy_matrix
-	.ent	destroy_matrix
-destroy_matrix:
-	.frame	$fp,40,$ra		# vars= 0, regs= 3/0, args= 16, extra= 8
-	.mask	0xd0000000,-8
-	.fmask	0x00000000,0
-	.set	noreorder
-	.cpload	$t9
-	.set	reorder
-	subu	$sp,$sp,40
-	.cprestore 16
-	sw	$ra,32($sp)
-	sw	$fp,28($sp)
-	sw	$gp,24($sp)
-	move	$fp,$sp
-	sw	$a0,40($fp)
-	lw	$v0,40($fp)
-	beq	$v0,$zero,$L63
-	lw	$v0,40($fp)
-	lw	$a0,8($v0)
-	la	$t9,free
-	jal	$ra,$t9
-	lw	$a0,40($fp)
-	la	$t9,free
-	jal	$ra,$t9
-$L63:
-	move	$sp,$fp
-	lw	$ra,32($sp)
-	lw	$fp,28($sp)
-	addu	$sp,$sp,40
-	j	$ra
-	.end	destroy_matrix
-	.size	destroy_matrix, .-destroy_matrix
 	.align	2
 	.globl	fillUpMatrices
 	.ent	fillUpMatrices
@@ -759,16 +820,16 @@ fillUpMatrices:
 	sw	$a2,32($fp)
 	sw	$a3,36($fp)
 	sw	$zero,8($fp)
-$L66:
+$L68:
 	lw	$v1,32($fp)
 	lw	$v0,32($fp)
 	mult	$v1,$v0
 	mflo	$v1
 	lw	$v0,8($fp)
 	slt	$v0,$v0,$v1
-	bne	$v0,$zero,$L69
-	b	$L67
-$L69:
+	bne	$v0,$zero,$L71
+	b	$L69
+$L71:
 	lw	$a0,24($fp)
 	lw	$v0,8($fp)
 	sll	$v1,$v0,3
@@ -783,14 +844,14 @@ $L69:
 	lw	$v0,8($fp)
 	addu	$v0,$v0,1
 	sw	$v0,8($fp)
-	b	$L66
-$L67:
+	b	$L68
+$L69:
 	lw	$v0,32($fp)
 	lw	$v1,32($fp)
 	mult	$v0,$v1
 	mflo	$v0
 	sw	$v0,8($fp)
-$L70:
+$L72:
 	lw	$v1,32($fp)
 	lw	$v0,32($fp)
 	mult	$v1,$v0
@@ -798,9 +859,9 @@ $L70:
 	sll	$v1,$v0,1
 	lw	$v0,8($fp)
 	slt	$v0,$v0,$v1
-	bne	$v0,$zero,$L73
-	b	$L65
-$L73:
+	bne	$v0,$zero,$L75
+	b	$L67
+$L75:
 	lw	$a0,28($fp)
 	lw	$v1,32($fp)
 	lw	$v0,32($fp)
@@ -820,8 +881,8 @@ $L73:
 	lw	$v0,8($fp)
 	addu	$v0,$v0,1
 	sw	$v0,8($fp)
-	b	$L70
-$L65:
+	b	$L72
+$L67:
 	move	$sp,$fp
 	lw	$fp,20($sp)
 	addu	$sp,$sp,24
@@ -855,16 +916,16 @@ matrix_multiply:
 	jal	$ra,$t9
 	sw	$v0,28($fp)
 	sw	$zero,40($fp)
-$L75:
+$L77:
 	lw	$v1,24($fp)
 	lw	$v0,24($fp)
 	mult	$v1,$v0
 	mflo	$v1
 	lw	$v0,40($fp)
 	slt	$v0,$v0,$v1
-	bne	$v0,$zero,$L78
-	b	$L76
-$L78:
+	bne	$v0,$zero,$L80
+	b	$L78
+$L80:
 	lw	$v1,40($fp)
 	lw	$v0,24($fp)
 	div	$0,$v1,$v0
@@ -890,13 +951,13 @@ $L78:
 	sw	$zero,48($fp)
 	sw	$zero,52($fp)
 	sw	$zero,44($fp)
-$L79:
+$L81:
 	lw	$v0,44($fp)
 	lw	$v1,24($fp)
 	slt	$v0,$v0,$v1
-	bne	$v0,$zero,$L82
-	b	$L80
-$L82:
+	bne	$v0,$zero,$L84
+	b	$L82
+$L84:
 	lw	$a0,72($fp)
 	lw	$v1,32($fp)
 	lw	$v0,24($fp)
@@ -926,8 +987,8 @@ $L82:
 	lw	$v0,44($fp)
 	addu	$v0,$v0,1
 	sw	$v0,44($fp)
-	b	$L79
-$L80:
+	b	$L81
+$L82:
 	lw	$a0,28($fp)
 	lw	$v0,40($fp)
 	sll	$v1,$v0,3
@@ -938,8 +999,8 @@ $L80:
 	lw	$v0,40($fp)
 	addu	$v0,$v0,1
 	sw	$v0,40($fp)
-	b	$L75
-$L76:
+	b	$L77
+$L78:
 	lw	$v0,28($fp)
 	move	$sp,$fp
 	lw	$ra,64($sp)
@@ -950,7 +1011,7 @@ $L76:
 	.size	matrix_multiply, .-matrix_multiply
 	.rdata
 	.align	2
-$LC22:
+$LC24:
 	.ascii	"%d\000"
 	.text
 	.align	2
@@ -975,40 +1036,40 @@ print_matrix:
 	lw	$v0,0($v0)
 	sw	$v0,24($fp)
 	lw	$a0,64($fp)
-	la	$a1,$LC22
+	la	$a1,$LC24
 	lw	$a2,24($fp)
 	la	$t9,fprintf
 	jal	$ra,$t9
 	sw	$v0,44($fp)
 	lw	$v0,44($fp)
-	bgez	$v0,$L84
-	la	$a0,$LC19
+	bgez	$v0,$L86
+	la	$a0,$LC21
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L84:
+$L86:
 	lw	$a0,64($fp)
-	la	$a1,$LC18
+	la	$a1,$LC20
 	li	$a2,32			# 0x20
 	la	$t9,fprintf
 	jal	$ra,$t9
 	sw	$v0,44($fp)
 	lw	$v0,44($fp)
-	bgez	$v0,$L85
-	la	$a0,$LC19
+	bgez	$v0,$L87
+	la	$a0,$LC21
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L85:
+$L87:
 	sw	$zero,40($fp)
-$L86:
+$L88:
 	lw	$v1,24($fp)
 	lw	$v0,24($fp)
 	mult	$v1,$v0
 	mflo	$v1
 	lw	$v0,40($fp)
 	slt	$v0,$v0,$v1
-	bne	$v0,$zero,$L89
-	b	$L87
-$L89:
+	bne	$v0,$zero,$L91
+	b	$L89
+$L91:
 	lw	$a0,68($fp)
 	lw	$v0,40($fp)
 	sll	$v1,$v0,3
@@ -1017,46 +1078,46 @@ $L89:
 	l.d	$f0,0($v0)
 	s.d	$f0,32($fp)
 	lw	$a0,64($fp)
-	la	$a1,$LC9
+	la	$a1,$LC11
 	lw	$a2,32($fp)
 	lw	$a3,36($fp)
 	la	$t9,fprintf
 	jal	$ra,$t9
 	sw	$v0,44($fp)
 	lw	$v0,44($fp)
-	bgez	$v0,$L90
-	la	$a0,$LC19
+	bgez	$v0,$L92
+	la	$a0,$LC21
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L90:
+$L92:
 	lw	$a0,64($fp)
-	la	$a1,$LC18
+	la	$a1,$LC20
 	li	$a2,32			# 0x20
 	la	$t9,fprintf
 	jal	$ra,$t9
 	sw	$v0,44($fp)
 	lw	$v0,44($fp)
-	bgez	$v0,$L88
-	la	$a0,$LC19
+	bgez	$v0,$L90
+	la	$a0,$LC21
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L88:
+$L90:
 	lw	$v0,40($fp)
 	addu	$v0,$v0,1
 	sw	$v0,40($fp)
-	b	$L86
-$L87:
+	b	$L88
+$L89:
 	lw	$a0,64($fp)
 	la	$a1,$LC1
 	la	$t9,fprintf
 	jal	$ra,$t9
 	sw	$v0,44($fp)
 	lw	$v0,44($fp)
-	bgez	$v0,$L83
-	la	$a0,$LC19
+	bgez	$v0,$L85
+	la	$a0,$LC21
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L83:
+$L85:
 	move	$sp,$fp
 	lw	$ra,56($sp)
 	lw	$fp,52($sp)
@@ -1066,69 +1127,69 @@ $L83:
 	.size	print_matrix, .-print_matrix
 	.rdata
 	.align	2
-$LC23:
+$LC25:
 	.ascii	"-h\000"
 	.align	2
-$LC24:
+$LC26:
 	.ascii	"--help\000"
 	.align	2
-$LC25:
+$LC27:
 	.ascii	"help\000"
 	.align	2
-$LC26:
+$LC28:
 	.ascii	"-V\000"
 	.align	2
-$LC27:
+$LC29:
 	.ascii	"--version\000"
 	.align	2
-$LC28:
+$LC30:
 	.ascii	"version\000"
 	.align	2
-$LC29:
+$LC31:
 	.ascii	"command parameter invalid\000"
 	.text
 	.align	2
 	.globl	main
 	.ent	main
 main:
-	.frame	$fp,80,$ra		# vars= 40, regs= 3/0, args= 16, extra= 8
+	.frame	$fp,72,$ra		# vars= 32, regs= 3/0, args= 16, extra= 8
 	.mask	0xd0000000,-8
 	.fmask	0x00000000,0
 	.set	noreorder
 	.cpload	$t9
 	.set	reorder
-	subu	$sp,$sp,80
+	subu	$sp,$sp,72
 	.cprestore 16
-	sw	$ra,72($sp)
-	sw	$fp,68($sp)
-	sw	$gp,64($sp)
+	sw	$ra,64($sp)
+	sw	$fp,60($sp)
+	sw	$gp,56($sp)
 	move	$fp,$sp
-	sw	$a0,80($fp)
-	sw	$a1,84($fp)
+	sw	$a0,72($fp)
+	sw	$a1,76($fp)
 	la	$v0,__sF+88
 	sw	$v0,24($fp)
 	sb	$zero,28($fp)
-	lw	$v0,80($fp)
+	lw	$v0,72($fp)
 	slt	$v0,$v0,2
-	bne	$v0,$zero,$L94
-	lw	$v0,84($fp)
+	bne	$v0,$zero,$L96
+	lw	$v0,76($fp)
 	addu	$v0,$v0,4
 	lw	$a0,0($v0)
-	la	$a1,$LC23
+	la	$a1,$LC25
 	la	$t9,strcmp
 	jal	$ra,$t9
-	beq	$v0,$zero,$L96
-	lw	$v0,84($fp)
+	beq	$v0,$zero,$L98
+	lw	$v0,76($fp)
 	addu	$v0,$v0,4
 	lw	$a0,0($v0)
-	la	$a1,$LC24
+	la	$a1,$LC26
 	la	$t9,strcmp
 	jal	$ra,$t9
-	bne	$v0,$zero,$L95
-$L96:
-	lw	$v0,$LC25
+	bne	$v0,$zero,$L97
+$L98:
+	lw	$v0,$LC27
 	sw	$v0,32($fp)
-	lbu	$v0,$LC25+4
+	lbu	$v0,$LC27+4
 	sb	$v0,36($fp)
 	addu	$v0,$fp,32
 	lw	$a0,24($fp)
@@ -1137,26 +1198,26 @@ $L96:
 	jal	$ra,$t9
 	li	$v0,1			# 0x1
 	sb	$v0,28($fp)
-	b	$L94
-$L95:
-	lw	$v0,84($fp)
+	b	$L96
+$L97:
+	lw	$v0,76($fp)
 	addu	$v0,$v0,4
 	lw	$a0,0($v0)
-	la	$a1,$LC26
+	la	$a1,$LC28
 	la	$t9,strcmp
 	jal	$ra,$t9
-	beq	$v0,$zero,$L99
-	lw	$v0,84($fp)
+	beq	$v0,$zero,$L101
+	lw	$v0,76($fp)
 	addu	$v0,$v0,4
 	lw	$a0,0($v0)
-	la	$a1,$LC27
+	la	$a1,$LC29
 	la	$t9,strcmp
 	jal	$ra,$t9
-	bne	$v0,$zero,$L98
-$L99:
-	lw	$v0,$LC28
+	bne	$v0,$zero,$L100
+$L101:
+	lw	$v0,$LC30
 	sw	$v0,40($fp)
-	lw	$v0,$LC28+4
+	lw	$v0,$LC30+4
 	sw	$v0,44($fp)
 	addu	$v0,$fp,40
 	lw	$a0,24($fp)
@@ -1165,68 +1226,68 @@ $L99:
 	jal	$ra,$t9
 	li	$v0,1			# 0x1
 	sb	$v0,28($fp)
-	b	$L94
-$L98:
-	la	$a0,$LC29
+	b	$L96
+$L100:
+	la	$a0,$LC31
 	la	$t9,raiseError
 	jal	$ra,$t9
-$L94:
+$L96:
 	.set	noreorder
 	nop
 	.set	reorder
-$L101:
-	lbu	$v0,28($fp)
-	beq	$v0,$zero,$L103
-	b	$L102
 $L103:
-	addu	$v0,$fp,60
+	lbu	$v0,28($fp)
+	beq	$v0,$zero,$L105
+	b	$L104
+$L105:
+	addu	$v0,$fp,48
 	move	$a0,$v0
 	la	$t9,readInput
 	jal	$ra,$t9
 	sw	$v0,input
-	lw	$a0,60($fp)
-	lw	$a1,60($fp)
-	la	$t9,create_matrix
-	jal	$ra,$t9
-	sw	$v0,48($fp)
-	lw	$a0,60($fp)
-	lw	$a1,60($fp)
-	la	$t9,create_matrix
-	jal	$ra,$t9
-	sw	$v0,52($fp)
 	lw	$a0,48($fp)
-	lw	$a1,52($fp)
-	lw	$a2,60($fp)
+	lw	$a1,48($fp)
+	la	$t9,create_matrix
+	jal	$ra,$t9
+	sw	$v0,matrix_a
+	lw	$a0,48($fp)
+	lw	$a1,48($fp)
+	la	$t9,create_matrix
+	jal	$ra,$t9
+	sw	$v0,matrix_b
+	lw	$a0,matrix_a
+	lw	$a1,matrix_b
+	lw	$a2,48($fp)
 	lw	$a3,input
 	la	$t9,fillUpMatrices
 	jal	$ra,$t9
-	lw	$a0,48($fp)
-	lw	$a1,52($fp)
+	lw	$a0,matrix_a
+	lw	$a1,matrix_b
 	la	$t9,matrix_multiply
 	jal	$ra,$t9
-	sw	$v0,56($fp)
+	sw	$v0,matrix_c
 	lw	$a0,24($fp)
-	lw	$a1,56($fp)
+	lw	$a1,matrix_c
 	la	$t9,print_matrix
 	jal	$ra,$t9
-	lw	$a0,48($fp)
+	lw	$a0,matrix_a
 	la	$t9,destroy_matrix
 	jal	$ra,$t9
-	lw	$a0,52($fp)
+	lw	$a0,matrix_b
 	la	$t9,destroy_matrix
 	jal	$ra,$t9
-	lw	$a0,56($fp)
+	lw	$a0,matrix_c
 	la	$t9,destroy_matrix
 	jal	$ra,$t9
 	la	$t9,freeInputArray
 	jal	$ra,$t9
-	b	$L101
-$L102:
+	b	$L103
+$L104:
 	move	$v0,$zero
 	move	$sp,$fp
-	lw	$ra,72($sp)
-	lw	$fp,68($sp)
-	addu	$sp,$sp,80
+	lw	$ra,64($sp)
+	lw	$fp,60($sp)
+	addu	$sp,$sp,72
 	j	$ra
 	.end	main
 	.size	main, .-main

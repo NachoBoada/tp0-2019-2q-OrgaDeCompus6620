@@ -19,7 +19,6 @@ void freeInputArray(){
         free(input);
     }
     input = NULL;
-    printf("vector de inputs liberado\n");
 }
 
 void printArray(int len,double* array){
@@ -34,7 +33,6 @@ void destroy_matrix(matrix_t* m){
         free(m->array);
         free(m);
     }
-    printf("matriz liberada\n");
 }
 
 void raiseError(const char* s){
@@ -89,7 +87,6 @@ void readElementsInLine(int dimention, double* array){
 
     char* line = readLine(stdin);
     char* head_line_pointer = line;
-    printf("line: %s\n",line);
 
     float x;
     int offset;
