@@ -1,12 +1,6 @@
 #Es el gitignore por default de C++. Se puede borrar o escribir lo que se necesite. 
 
-#Agregados por Nacho:
-pruebas2
-pruebas2.c
-pruebas2.o
-Pruebas
-Pruebas.c
-Pruebas.o
+
 
 # Prerequisites
 *.d
