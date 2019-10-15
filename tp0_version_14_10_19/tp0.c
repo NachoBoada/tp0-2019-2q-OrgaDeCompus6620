@@ -101,10 +101,6 @@ void readElementsInLine(int dimention, double* array){
     {
         returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
 
-        printf("line: %s\n",line);
-        printf("cantidad de numeros cargados en array: %d\n",i);
-        printf("offset: %d\n",offset);
-        printf("=======================\n");
         if (ferror(stdin) != 0){
             free(array);
             free(line);
@@ -116,6 +112,8 @@ void readElementsInLine(int dimention, double* array){
             array[i] = (double)x;
             i++;
 			if (i > dimention*dimention*2){
+                free(array);
+                free(line);
 				raiseError("La cantidad de numeros es mayor a lo especificado segun la dimension");
 			}
             continue;
@@ -126,8 +124,7 @@ void readElementsInLine(int dimention, double* array){
             if(cantidadDeElementosLeidos != dimention*dimention*2){
                 free(array);
                 free(line);
-                printf("aca\n");
-                raiseError("No coincide dimension con cantidad de elementos ingresados");
+                raiseError("La cantidad de numeros es menor a lo especificado segun la dimension");
             }
             break;
         }
