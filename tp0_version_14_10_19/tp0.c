@@ -19,6 +19,7 @@ void freeInputArray(){
         free(input);
     }
     input = NULL;
+    printf("vector de inputs liberado\n");
 }
 
 void printArray(int len,double* array){
@@ -88,6 +89,7 @@ void readElementsInLine(int dimention, double* array){
 
     char* line = readLine(stdin);
     char* head_line_pointer = line;
+    printf("line: %s\n",line);
 
     float x;
     int offset;
@@ -98,6 +100,7 @@ void readElementsInLine(int dimention, double* array){
     while (true)
     {
         returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
+        printf("line: %s\n",line);
         if (ferror(stdin) != 0){
             free(array);
             free(line);
@@ -110,11 +113,13 @@ void readElementsInLine(int dimention, double* array){
             i++;
             continue;
         }
+
         if (returnValue == -1){
             cantidadDeElementosLeidos = i;
             if(cantidadDeElementosLeidos != dimention*dimention*2){
                 free(array);
                 free(line);
+                printf("aca\n");
                 raiseError("No coincide dimension con cantidad de elementos ingresados");
             }
             break;
