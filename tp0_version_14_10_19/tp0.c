@@ -100,7 +100,12 @@ void readElementsInLine(int dimention, double* array){
     while (true)
     {
         returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
+
         printf("line: %s\n",line);
+        printf("cantidad de numeros cargados en array: %d\n",i);
+        printf("offset: %d\n",offset);
+        printf("offset: %d\n",offset);
+        printf("=======================\n");
         if (ferror(stdin) != 0){
             free(array);
             free(line);
