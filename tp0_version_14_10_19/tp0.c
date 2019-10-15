@@ -115,6 +115,9 @@ void readElementsInLine(int dimention, double* array){
             head_line_pointer += offset;
             array[i] = (double)x;
             i++;
+			if (i > dimention*dimention*2){
+				raiseError("La cantidad de numeros es mayor a lo especificado segun la dimension");
+			}
             continue;
         }
 
