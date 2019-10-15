@@ -104,7 +104,6 @@ void readElementsInLine(int dimention, double* array){
         printf("line: %s\n",line);
         printf("cantidad de numeros cargados en array: %d\n",i);
         printf("offset: %d\n",offset);
-        printf("offset: %d\n",offset);
         printf("=======================\n");
         if (ferror(stdin) != 0){
             free(array);
