@@ -3,16 +3,13 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
+double* input = NULL; //GLOBAL ACCESS VARIABLE
+
 typedef struct matrix {
     size_t rows;
     size_t cols;
     double* array;
 } matrix_t;
-
-double* input = NULL;          //GLOBAL ACCESS VARIABLE
-matrix_t* matrix_a = NULL;     //GLOBAL ACCESS VARIABLE
-matrix_t* matrix_b = NULL;     //GLOBAL ACCESS VARIABLE
-matrix_t* matrix_c = NULL;     //GLOBAL ACCESS VARIABLE
 
 void freeInputArray(){
     if (input != NULL){
@@ -28,13 +25,6 @@ void printArray(int len,double* array){
     }
 }
 
-void destroy_matrix(matrix_t* m){
-    if (m != NULL){
-        free(m->array);
-        free(m);
-    }
-}
-
 void raiseError(const char* s){
 
     fprintf(stderr,"\n");
@@ -43,9 +33,6 @@ void raiseError(const char* s){
     fprintf(stderr,"=======================\n");
     fprintf(stderr,"\n");
 
-    destroy_matrix(matrix_a);
-    destroy_matrix(matrix_b);
-    destroy_matrix(matrix_c);
     freeInputArray();
     exit (EXIT_FAILURE);
 }
@@ -76,9 +63,6 @@ char *readLine(FILE* fp){
 
     str = realloc(str, sizeof(char)*len);
 
-    if (str == NULL){
-        raiseError("REALLOC ERROR: null pointer returned");
-    }
 
     return str;
 }
@@ -92,27 +76,22 @@ void readElementsInLine(int dimention, double* array){
     int offset;
     int i = 0;
     int returnValue;
-    int cantidadDeElementosLeidos = 0;
+    int cantidadDeElementosLeidos;
 
     while (true)
     {
         returnValue = sscanf(head_line_pointer, "%g%n", &x, &offset);
-
         if (ferror(stdin) != 0){
             free(array);
             free(line);
             raiseError("SSCANF ERROR: I/O error");
         }
 
+
         if (returnValue == 1){
             head_line_pointer += offset;
             array[i] = (double)x;
             i++;
-			if (i > dimention*dimention*2){
-                free(array);
-                free(line);
-				raiseError("La cantidad de numeros es mayor a lo especificado segun la dimension");
-			}
             continue;
         }
 
@@ -121,7 +100,7 @@ void readElementsInLine(int dimention, double* array){
             if(cantidadDeElementosLeidos != dimention*dimention*2){
                 free(array);
                 free(line);
-                raiseError("La cantidad de numeros es menor a lo especificado segun la dimension");
+                raiseError("No coincide dimension con cantidad de elementos ingresados");
             }
             break;
         }
@@ -213,7 +192,15 @@ matrix_t* create_matrix(size_t rows, size_t cols){
     }
     matriz->rows = rows;
     matriz->cols = cols;
+
     return matriz;
+}
+
+void destroy_matrix(matrix_t* m){
+    if (m != NULL){
+        free(m->array);
+        free(m);
+    }
 }
 
 void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double* input){
@@ -275,6 +262,10 @@ int main(int argc, const char* argv[]){
     //MAIN PROGRAM
     while (!endProgram){
 
+        matrix_t* matrix_a;
+        matrix_t* matrix_b;
+        matrix_t* matrix_c;
+
         int dimention;
         input = readInput(&dimention);
         matrix_a = create_matrix(dimention,dimention);
@@ -287,6 +278,7 @@ int main(int argc, const char* argv[]){
         destroy_matrix(matrix_a);
         destroy_matrix(matrix_b);
         destroy_matrix(matrix_c);
+
         freeInputArray();
     }
     return 0;
