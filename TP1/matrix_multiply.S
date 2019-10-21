@@ -44,50 +44,16 @@ matrix_multiply:
     sw  t1,0($fp)	            #dimention = matrix_a->rows; Copio t1 (que es matriz_a->rows) en 0($fp).
     sw  t1,4($fp)               #dimention = matrix_a->rows; Copio t1 (que es matriz_a->rows) en 4($fp)
 
-#-------------------------------------------------------------
-#-------------------------------------------------------------
-#-------------------------------------------------------------
-
 #(SE TRADUCE) matrix_t* matrix_c; 
 #(SE TRADUCE) matrix_c = create_matrix(dimention,dimention);
 
-#esto desaparece------------INICIO-----------
+    move a0, t1                 #se guarda dimention en los registros que se pasan por parametro a funcion
+    move a1, t1
+    la t9, create_matrix	    
+    jal t9                      #Se llama a la funcion create_matrix
+    sw  v0, 28($fp)  		    #Lo retornado por create_matrix se guarda en v0, y lo guardo en su posicion de memoria dentro del stack frame.
 
-	#    move a0, t1                 #se guarda dimention en los registros que se pasan por parametro a funcion
-	#    move a1, t1
-	
-	#la t9, create_matrix	    
-    	#jal t9                      #Se llama a la funcion create_matrix
-    
-#esto desaparece------------FIN-----------
-	
-#size of size_t 4 bytes - float	4 bytes -double	8 bytes
-#matriz=
-#	size_t rows; -4 bytes
-#	size_t cols; -4 bytes
-#	double* array; 8*dim*dim	
-#	Memoria a alocar: 4+4+8*dim*dim
-	
-	lw  t1, 16($fp) 	        #En 16($fp) esta el valor de dimention. Lo cargo en t1.
-    	mul t2, t1, t1 	            #t1 tiene la dimention, entonces queda dimention*dimention en t2.
-	li  t1, 8 					#Como son doubles los valores a reservar multiplico por 8 bytes.
-	mul t2, t1, t1 	            #T2 tiene cantidad de elementos * 8 bytes.
-	addi t2, t2, 8		        #Sumo 8: reservo para rows (4bytes) y cols(4bytes). T2 tiene 8+ 8*dim*dim
-	move a0, t2                 #Se guarda cantidad de bytes a reservar en los registros que se pasan por parametro a funcion
-    	jal mymalloc
-	
-#chequear que no haya retornado NULL
-	beqz v0, error_mem
-#Almaceno la direccion de memoria
-	sw  v0, 28($fp)  		    #Lo retornado por create_matrix se guarda en v0, y lo guardo en su posicion de memoria dentro del stack frame.
-	
-#FALTA ACOMODAR LOS ELEMENTOS NUEVAMENTE EN LA MATRIZ SI ES QUE AHORA LOS GUARDAMOS EN UNA TIRA CONSECUTIVA.
-#TODO
-	
-
-#-------------------------------------------------------------
-#-------------------------------------------------------------
-#-------------------------------------------------------------
+    beqz v0,error_mem           #Si lo retornado por create_matrix es NULL (osea 0) se salta al tag de error
 
 #(SE TRADUCE) for (i = 0; i < dimention*dimention; i++);
 
@@ -191,8 +157,8 @@ add_element:
     b primer_for
 
 error_mem:
-	#Escribir mensaje de error
-	b ret
+	li v0,0
+    b fin
 
 ret:
     lw v0,28($fp)

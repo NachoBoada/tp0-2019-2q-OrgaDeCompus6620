@@ -243,7 +243,7 @@ int outputFile(FILE* out, char fileName[]){
     return 0;
 }
 
-matrix_t* create_matrix(size_t rows, size_t cols);
+matrix_t* create_matrix(size_t rows, size_t cols);// If returns null, there has been an error and it will be manage by the main program.
 
 void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double* input){
 
