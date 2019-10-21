@@ -47,28 +47,36 @@ void raiseError(const char* s){
     destroy_matrix(matrix_c);
     freeInputArray();
 */
-    exit (EXIT_FAILURE);
+    //exit (EXIT_FAILURE);
 }
 
 char *readLine(FILE* fp, double* array){ //NACHO: Agrego el array para poder liberarlo si algo falla
 //The size is extended by the input with the value of the provisional
     int size = 10; //HARDCODED
     char *str = NULL;
+    char *errorReturnValue = NULL;
     int ch;
     size_t len = 0;
+
 
     str = realloc(NULL, sizeof(char)*size);//size is start size
     if(str == NULL){
         free(array);
-        raiseError("No hay memoria suficiente para leer los datos de entrada");
+        raiseError("REALLOC ERROR: null pointer returned");
+        return errorReturnValue;
     }
-    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
-        str[len++]=ch;
-        if(len==size){
-            str = realloc(str, sizeof(char)*(size+=16)); //HARDCODED
-            if(str == NULL){
-                free(array);
-                raiseError("No hay memoria suficiente para leer los datos de entrada");
+    else{
+        while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+            str[len++]=ch;
+            if(len==size){
+
+                str = realloc(str, sizeof(char)*(size+=16)); //HARDCODED
+                if(str == NULL){
+                    free(str);
+                    free(array);
+                    raiseError("REALLOC ERROR: null pointer returned");
+                    return errorReturnValue;
+                }
             }
         }
     }
@@ -77,20 +85,23 @@ char *readLine(FILE* fp, double* array){ //NACHO: Agrego el array para poder lib
         free(str);
         free(array);
         raiseError("FGETC ERROR: I/O error");
+        return errorReturnValue;
     }
 
     str[len++]='\0';
 
     str = realloc(str, sizeof(char)*len);
     if (str == NULL){
+        free(str);
         free(array);
         raiseError("REALLOC ERROR: null pointer returned");
+        return errorReturnValue;
     }
 
     return str;
 }
 
-void readElementsInLine(int dimention, double* array){
+int readElementsInLine(int dimention, double* array){
 
     char* line = readLine(stdin, array); //line has all the characters of the current line in stdin.
     char* head_line_pointer = line;
@@ -100,6 +111,7 @@ void readElementsInLine(int dimention, double* array){
     int i = 0;
     int returnValue;
     int cantidadDeElementosLeidos = 0;
+    int errorReturnValue = 1;
 
     while (true)
     {
@@ -109,6 +121,7 @@ void readElementsInLine(int dimention, double* array){
             free(array);
             free(line);
             raiseError("SSCANF ERROR: I/O error");
+            return errorReturnValue;
         }
 
         if (returnValue == 1){
@@ -119,6 +132,7 @@ void readElementsInLine(int dimention, double* array){
                 free(array);
                 free(line);
 				raiseError("La cantidad de numeros es mayor a lo especificado segun la dimension");
+				return errorReturnValue;
 			}
             continue;
         }
@@ -129,6 +143,7 @@ void readElementsInLine(int dimention, double* array){
                 free(array);
                 free(line);
                 raiseError("La cantidad de numeros es menor a lo especificado segun la dimension");
+                return errorReturnValue;
             }
             break;
         }
@@ -137,10 +152,11 @@ void readElementsInLine(int dimention, double* array){
             free(array);
             free(line);
             raiseError("Input no numerico");
-            break;
+            return errorReturnValue;
         }
     }
     free(line);
+    return 0;
 }
 
 double* readInput(int* dimention){
@@ -148,24 +164,32 @@ double* readInput(int* dimention){
     float firstInputElement;//initialized as double to check if corrupted input
     double* array = NULL;
     int returnValue;
+    double* errorReturnValue = NULL;
 
     //READ FIRST
     returnValue = fscanf(stdin,"%g", &firstInputElement);
 
     //CHECK IF END OF LINE
     if (returnValue == -1){
-        if (ferror(stdin) != 0){{raiseError("FSCANF ERROR: I/O error");}}
-        else{exit (0);} // en este caso se identifica que el EOF no se debe a un error y se finaliza el programa sin problemas
+        if (ferror(stdin) != 0){
+            raiseError("FSCANF ERROR: I/O error");
+            return errorReturnValue;
+        }
+        else{
+            raiseError("archivo vacio");
+            return errorReturnValue;
     }
     //CHECK IF INPUT IS NUMERIC
     if (returnValue != 1){
         raiseError("Dimension no numerica");
+        return errorReturnValue;
     }
 
     //CHECK IF INPUT IS TYPE UINT
     float mantiza = firstInputElement - (int)firstInputElement;
     if (mantiza > 0 || (firstInputElement <= 0)){
         raiseError("La dimension no es entera positiva");
+        return errorReturnValue;
     }
 
     //ALLOCATE MEMORY FOR MATRICES INPUT ELEMENTS
@@ -175,38 +199,47 @@ double* readInput(int* dimention){
     //CHECK IF ALLOCATION IS SUCCESSFULL
     if (array == NULL){
         raiseError("No se pudo allocar memoria para inputs");
+        return errorReturnValue;
     }
     //READ WHOLE LINE
-    readElementsInLine((*dimention), array);
-
+    if (readElementsInLine((*dimention), array) != 0){
+        return errorReturnValue;
+    }
     return array;
 }
 
-void outputFile(FILE* out, char fileName[]){
+int outputFile(FILE* out, char fileName[]){
 //NACHO: No hay problema con los "riseError" que no liberan memoria, porque en esta funcion no hay memoria dinamica reservada previamente todavia.
     //ADAPTS FILE NAME
     char s[100] = "";
     strcat(s, "./");
     strcat(s, fileName);
     int return_value;
+    int errorReturnValue = 1;
 
     //TRIES TO OPEN FILE
     FILE* fp;
     fp = fopen(s,"r");
     if(fp == NULL){
         raiseError("no se pudo abrir archivo de salida");
+        return errorReturnValue;
     }
 
     //OUTPUTS
     char c;
 	while(c != EOF){
         c = getc(fp);
-        if ((return_value = fprintf(out,"%c",c)) < 0){raiseError("FPRINTF ERROR: I/O error");}
+        if ((return_value = fprintf(out,"%c",c)) < 0){
+            raiseError("FPRINTF ERROR: I/O error");
+            return errorReturnValue;
+        }
 	}
 
     if (ferror(stdin) != 0){
         raiseError("FGETC ERROR: I/O error");
+        return errorReturnValue;
     }
+    return 0;
 }
 
 matrix_t* create_matrix(size_t rows, size_t cols){ // If returns null, there has been an error and it will be manage by the main program.
@@ -275,17 +308,22 @@ int main(int argc, const char* argv[]){
     if (argc > 1){
         if (strcmp(argv[1],"-h") == 0 || strcmp(argv[1],"--help") == 0){
             char fileName[] = "help";
-            outputFile(OUT,fileName);
+            if ((outputFile(OUT,fileName)) != 0){
+                return 1;
+            }
             endProgram = true;
         }
 
         else if (strcmp(argv[1],"-V") == 0 || strcmp(argv[1],"--version") == 0){
             char fileName[] = "version";
-            outputFile(OUT,fileName);
+            if ((outputFile(OUT,fileName)) != 0){
+                return 1;
+            }
             endProgram = true;
         }
         else{
             raiseError("command parameter invalid");
+            return 1;
         }
     }
 
@@ -298,6 +336,10 @@ int main(int argc, const char* argv[]){
     while (!endProgram){
         int dimention;
         input = readInput(&dimention);
+
+        if (input == NULL)){
+            return 1;
+        }
 
         matrix_a = create_matrix(dimention,dimention);
         if (matrix_a == NULL){
