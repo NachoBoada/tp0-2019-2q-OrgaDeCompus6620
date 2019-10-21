@@ -243,20 +243,7 @@ int outputFile(FILE* out, char fileName[]){
     return 0;
 }
 
-matrix_t* create_matrix(size_t rows, size_t cols){ // If returns null, there has been an error and it will be manage by the main program.
-    matrix_t *matriz = malloc(sizeof(matrix_t));
-    if (matriz == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        return NULL; // NACHO: Version anterior: raiseError("no se pudo allocar memoria para matriz");
-    }
-    matriz->array = malloc(sizeof(double) * cols * rows); //representara los elementos de la matriz dispuestos en row-major order
-    if (matriz->array == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        free(matriz);
-        return NULL; //NACHO: raiseError("no se pudo allocar memoria para elementos de matriz");
-    }
-    matriz->rows = rows;
-    matriz->cols = cols;
-    return matriz;
-}
+matrix_t* create_matrix(size_t rows, size_t cols);
 
 void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double* input){
 
@@ -270,33 +257,7 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double
     }
 }
 
-matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b){
-    int aux1;
-    int aux2;
-    int row;
-    int column;
-    int i;
-    int j;
-    int dimention;
-    double element;
-    dimention = matrix_a->rows;
-    matrix_t* matrix_c;
-    matrix_c = create_matrix(dimention,dimention);
-    for (i = 0; i < dimention*dimention; i++){
-        row = (int)(i / dimention);
-        column = (int)(i % dimention);
-        element = 0;
-        for (j = 0; j < dimention; j++){
-            aux1 = row*dimention;
-            aux1 = aux1 + j;
-            aux1 = matrix_a->array[aux1];
-            aux2 = j*dimention;
-            aux2 = aux2 + column;
-            aux2 = matrix_b->array[aux2];
-            aux1 = aux1 * aux2;
-            element = element + aux1;}
-        matrix_c->array[i] = element;}
-    return matrix_c;}
+matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b);
 
 int print_matrix(FILE* out, matrix_t* matrix_m){
     int dimention = matrix_m->rows;
