@@ -1,5 +1,5 @@
 ToDo: 
-	1) Hacer funcionar el mymalloc.S desde el matrix_multiply.S
+	1) Hacer funcionar el mymalloc.S desde el matrix_multiply.S (o desde create_matrix.S, si se llama a create_matrix desde el matrix_multiply (lo que haría que quede parecido a la implementacion original). Recordar validar que si algo falla, retorne NULL al main.
 	2) Crear el create_matrix.S (usando como guia la funcion en el tp1.c). Despues
 		2.1) Despues Borrar la implementacion del create_matrix del tp1.c
 	3) 
