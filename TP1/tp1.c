@@ -9,22 +9,21 @@ typedef struct matrix {
     double* array;
 } matrix_t;
 
-double* input = NULL;          //GLOBAL ACCESS VARIABLE
+/*double* input = NULL;          //GLOBAL ACCESS VARIABLE
 matrix_t* matrix_a = NULL;     //GLOBAL ACCESS VARIABLE
 matrix_t* matrix_b = NULL;     //GLOBAL ACCESS VARIABLE
 matrix_t* matrix_c = NULL;     //GLOBAL ACCESS VARIABLE
 
-void freeInputArray(){
-    if (input != NULL){
-        free(input);
-    }
-    input = NULL;
-}
+-Se sacan los accesos globales. Comentario del profesor:
+"Si bien resuelve el mem leak usando variables globales y para este TP está
+OK, no es bueno ni necesario hacerlo, quita totalmente generalidad, y
+complica un eventual uso del código en un proceso multi-thread."
+*/
 
 void printArray(int len,double* array){
     int i;
     for(i=0;i<len;i++){
-        printf("elemento %d: %g\n",i,array[i]);
+        printf("elemento %d: %g\n", i, array[i]);
     }
 }
 
@@ -42,41 +41,49 @@ void raiseError(const char* s){
     fprintf(stderr,"ERROR MESSAGE: %s\n",s);
     fprintf(stderr,"=======================\n");
     fprintf(stderr,"\n");
-
+/* NACHO: Se comenta ya que se quitaron las variables globales
     destroy_matrix(matrix_a);
     destroy_matrix(matrix_b);
     destroy_matrix(matrix_c);
     freeInputArray();
+*/
     exit (EXIT_FAILURE);
 }
 
-char *readLine(FILE* fp){
+char *readLine(FILE* fp, double* array){ //NACHO: Agrego el array para poder liberarlo si algo falla
 //The size is extended by the input with the value of the provisional
     int size = 10; //HARDCODED
-    char *str;
+    char *str = NULL;
     int ch;
     size_t len = 0;
 
     str = realloc(NULL, sizeof(char)*size);//size is start size
-    if(!str)return str;
+    if(str == NULL){
+        free(array);
+        raiseError("No hay memoria suficiente para leer los datos de entrada");
+    }
     while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
         str[len++]=ch;
         if(len==size){
             str = realloc(str, sizeof(char)*(size+=16)); //HARDCODED
-            if(!str)return str;
+            if(str == NULL){
+                free(array);
+                raiseError("No hay memoria suficiente para leer los datos de entrada");
+            }
         }
     }
 
     if (ferror(stdin) != 0){
         free(str);
+        free(array);
         raiseError("FGETC ERROR: I/O error");
     }
 
     str[len++]='\0';
 
     str = realloc(str, sizeof(char)*len);
-
     if (str == NULL){
+        free(array);
         raiseError("REALLOC ERROR: null pointer returned");
     }
 
@@ -85,7 +92,7 @@ char *readLine(FILE* fp){
 
 void readElementsInLine(int dimention, double* array){
 
-    char* line = readLine(stdin);
+    char* line = readLine(stdin, array); //line has all the characters of the current line in stdin.
     char* head_line_pointer = line;
 
     float x;
@@ -132,14 +139,14 @@ void readElementsInLine(int dimention, double* array){
             raiseError("Input no numerico");
             break;
         }
-
     }
+    free(line);
 }
 
 double* readInput(int* dimention){
-
+//NACHO: No hay problema con los "riseError" que no liberan memoria, porque en esta funcion no hay memoria dinamica reservada previamente todavia.
     float firstInputElement;//initialized as double to check if corrupted input
-    double* array;
+    double* array = NULL;
     int returnValue;
 
     //READ FIRST
@@ -176,6 +183,7 @@ double* readInput(int* dimention){
 }
 
 void outputFile(FILE* out, char fileName[]){
+//NACHO: No hay problema con los "riseError" que no liberan memoria, porque en esta funcion no hay memoria dinamica reservada previamente todavia.
     //ADAPTS FILE NAME
     char s[100] = "";
     strcat(s, "./");
@@ -201,15 +209,15 @@ void outputFile(FILE* out, char fileName[]){
     }
 }
 
-matrix_t* create_matrix(size_t rows, size_t cols){
+matrix_t* create_matrix(size_t rows, size_t cols){ // If returns null, there has been an error and it will be manage by the main program.
     matrix_t *matriz = malloc(sizeof(matrix_t));
     if (matriz == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
-        raiseError("no se pudo allocar memoria para matriz");
+        return NULL; // NACHO: Version anterior: raiseError("no se pudo allocar memoria para matriz");
     }
     matriz->array = malloc(sizeof(double) * cols * rows); //representara los elementos de la matriz dispuestos en row-major order
     if (matriz->array == NULL){ //si no puede reservar la memoria, deja el puntero en NULL
         free(matriz);
-        raiseError("no se pudo allocar memoria para elementos de matriz");
+        return NULL; //NACHO: raiseError("no se pudo allocar memoria para elementos de matriz");
     }
     matriz->rows = rows;
     matriz->cols = cols;
@@ -230,22 +238,31 @@ void fillUpMatrices(matrix_t* matrix_a, matrix_t* matrix_b, int dimention,double
 
 matrix_t* matrix_multiply(matrix_t* matrix_a,matrix_t* matrix_b);
 
-void print_matrix(FILE* out, matrix_t* matrix_m){
-
+int print_matrix(FILE* out, matrix_t* matrix_m){
     int dimention = matrix_m->rows;
     double x;
     int i;
-    int return_value;
 
-    if ((return_value = fprintf(out,"%d",dimention)) < 0){raiseError("FPRINTF ERROR: I/O error");} //se mira que el valor no sea negativo porque si lo es entonces es un error segun la documentacion de fprinf
-    if ((return_value = fprintf(out,"%c",' ')) < 0){raiseError("FPRINTF ERROR: I/O error");}
+    if (fprintf(out,"%d",dimention) < 0){ //se mira que el valor no sea negativo porque si lo es entonces es un error segun la documentacion de fprinf
+        return 1; //NACHO: raiseError("FPRINTF ERROR: I/O error");
+    }
+    if (fprintf(out,"%c",' ') < 0){
+        return 1; //NACHO: raiseError("FPRINTF ERROR: I/O error");
+    }
 
 	for (i = 0; i < dimention*dimention; i++){
         x = matrix_m->array[i];
-        if ((return_value = fprintf(out,"%g",x)) < 0){raiseError("FPRINTF ERROR: I/O error");}
-        if ((return_value = fprintf(out,"%c",' ')) < 0){raiseError("FPRINTF ERROR: I/O error");}
+        if (fprintf(out,"%g",x) < 0){
+            return 1; //NACHO: raiseError("FPRINTF ERROR: I/O error");
+        }
+        if (fprintf(out,"%c",' ') < 0){
+            return 1; //NACHO: raiseError("FPRINTF ERROR: I/O error");
+        }
 	}
-    if ((return_value = fprintf(out,"\n")) < 0){raiseError("FPRINTF ERROR: I/O error");}
+    if (fprintf(out,"\n") < 0){
+        return 1; //NACHO: raiseError("FPRINTF ERROR: I/O error");
+    }
+    return 0; // si retorna 0 significa que no hubo errores.
 }
 
 int main(int argc, const char* argv[]){
@@ -273,21 +290,50 @@ int main(int argc, const char* argv[]){
     }
 
     //MAIN PROGRAM
-    while (!endProgram){
+    double* input = NULL;  //NACHO: Se sacan las variables globales
+    matrix_t* matrix_a = NULL;
+    matrix_t* matrix_b = NULL;
+    matrix_t* matrix_c = NULL;
 
+    while (!endProgram){
         int dimention;
         input = readInput(&dimention);
+
         matrix_a = create_matrix(dimention,dimention);
+        if (matrix_a == NULL){
+            free(input);
+            raiseError("No se pudo allocar memoria para elementos de matriz");
+        }
         matrix_b = create_matrix(dimention,dimention);
+        if (matrix_b == NULL){
+            destroy_matrix(matrix_a);
+            free(input);
+            raiseError("No se pudo allocar memoria para elementos de matriz");
+        }
+
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
 
+        /*NACHO: Hay que agregar una manera de manejar que el multiply_matrix, cuando tiene un error al crear la matrix_c, o cualquier error,
+        retorne NULL*/
         matrix_c = matrix_multiply(matrix_a,matrix_b);
-        print_matrix(OUT,matrix_c);
+        if (matrix_c == NULL){
+            free(input);
+            destroy_matrix(matrix_a);
+            destroy_matrix(matrix_b);
+        }
 
+        if (print_matrix(OUT,matrix_c) != 0){
+            free(input);
+            destroy_matrix(matrix_a);
+            destroy_matrix(matrix_b);
+            destroy_matrix(matrix_c);
+            raiseError("FPRINTF ERROR: I/O error");
+        }
+
+        free(input);
         destroy_matrix(matrix_a);
         destroy_matrix(matrix_b);
         destroy_matrix(matrix_c);
-        freeInputArray();
     }
     return 0;
 }
