@@ -41,9 +41,8 @@ matrix_multiply:
 #(SE TRADUCE) matrix_c = create_matrix(dimention,dimention);
 
     move a0, t1                 #se guarda dimention en los registros que se pasan por parametro a funcion
-    move a1, t1
-    la t9, create_matrix	    
-    jal t9                      #Se llama a la funcion create_matrix
+    move a1, t1	    
+    jal create_matrix           #Se llama a la funcion create_matrix
     sw  v0, 28($fp)  		    #Lo retornado por create_matrix se guarda en v0, y lo guardo en su posicion de memoria dentro del stack frame.
 
     beqz v0,error_mem           #Si lo retornado por create_matrix es NULL (osea 0) se salta al tag de error
@@ -57,7 +56,7 @@ matrix_multiply:
     mul t2, t1, t1 	            #t1 tiene la dimention, entonces queda dimention*dimention en t2.
 
 primer_for:
-	bge  t3, t2, ret            #si "i" es mayor o igual a dimention * dimention, deja de procesar porque se termino el calculo de la matriz resultante.
+	bge  t3, t2, return_matrix_multiply            #si "i" es mayor o igual a dimention * dimention, deja de procesar porque se termino el calculo de la matriz resultante.
 
 #(SE TRADUCE) row = (int)(i / dimention);
 
@@ -153,7 +152,7 @@ error_mem:
 	li v0,0
     b fin
 
-ret:
+return_matrix_multiply:
     lw v0,28($fp)
 
 fin:	

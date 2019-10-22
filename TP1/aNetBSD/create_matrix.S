@@ -67,20 +67,19 @@ create_matrix:
 
     lw t1,16($fp)               # cargo matriz
     move v0,t1                  # cargo el puntero a matriz a v0 para retorno
-	b ret
-
+	b return_create_matrix
 
 error1:
     li v0,0                     # se retorna NULL (osea 0)
-    b ret
+    b return_create_matrix
 
 error2:
     lw a0,16($fp)               # cargo matriz
     jal myfree
     li v0,0                     # se retorna NULL (osea 0)
-    b ret
+    b return_create_matrix
 
-ret:	
+return_create_matrix:	
     lw	ra,32(sp)
 	lw	$fp,28(sp)
 	addu sp,sp,40
