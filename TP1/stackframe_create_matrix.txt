@@ -1,4 +1,4 @@
-    ===================================================== STACK FRAME de matrix_multiply
+    ===================================================== STACK FRAME de matrix_multiply o main
 44  cols
 40  rows
     ===================================================== STACK FRAME de create_matrix

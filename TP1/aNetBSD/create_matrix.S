@@ -10,7 +10,7 @@ create_matrix:
 #Se crea stack frame de la callee
 
 	.frame 	$fp,40,ra
-	subu 	sp,sp,24
+	subu 	sp,sp,40
 
 #Se crea SRA de la callee
 
