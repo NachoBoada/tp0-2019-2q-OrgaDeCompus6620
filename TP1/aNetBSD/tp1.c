@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include "mymalloc.h"
 
 typedef struct matrix {
     size_t rows;
@@ -19,8 +20,8 @@ void printArray(int len,double* array){
 
 void destroy_matrix(matrix_t* m){
     if (m != NULL){
-        free(m->array);
-        free(m);
+        myfree(m->array);
+        myfree(m);
     }
 }
 
@@ -308,30 +309,23 @@ int main(int argc, const char* argv[]){
         if (input == NULL){
             return 1;
         }
-        printf("antes de: matrix_a = create_matrix(dimention,dimention);\n");
         matrix_a = create_matrix(dimention,dimention);
-        printf("despues de: matrix_a = create_matrix(dimention,dimention);\n");
         if (matrix_a == NULL){
             free(input);
             raiseError("No se pudo allocar memoria para elementos de matriz");
             return 1;
         }
 
-        printf("antes de: matrix_b = create_matrix(dimention,dimention);\n");
         matrix_b = create_matrix(dimention,dimention);
-        printf("despues de: matrix_b = create_matrix(dimention,dimention);\n");
         if (matrix_b == NULL){
             destroy_matrix(matrix_a);
             free(input);
             raiseError("No se pudo allocar memoria para elementos de matriz");
             return 1;
         }
-        printf("antes de: fillUpMatrices(matrix_a,matrix_b, dimention,input);\n");
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
-        printf("despues de: fillUpMatrices(matrix_a,matrix_b, dimention,input);\n");
-        printf("antes de: matrix_c = matrix_multiply(matrix_a,matrix_b);\n");
+
         matrix_c = matrix_multiply(matrix_a,matrix_b);
-        printf("despues de: matrix_c = matrix_multiply(matrix_a,matrix_b);\n");
         if (matrix_c == NULL){
             free(input);
             destroy_matrix(matrix_a);
