@@ -60,7 +60,7 @@ matrix_t* create_matrix(size_t rows, size_t cols){ // If returns null, there has
     matriz->rows = rows;
     matriz->cols = cols;
     return matriz
-
+}
 =================================================================================================================================================================
 (SEPARADO EN DISTINTAS TAGS)
 

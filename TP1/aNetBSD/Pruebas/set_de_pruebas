@@ -1,0 +1,29 @@
+#!/bin/bash
+
+cat Pruebas/01_PruebaMatriz2MatricesChicasPrimeraSinErrorSegundaConError    |./tp1
+cat Pruebas/02_PruebaMatriz2MatricesGrandesPrimeraConErrorSegundaSinError    |./tp1
+cat Pruebas/03_PruebaMatriz2MatricesGrandesPrimeraSinErrorSegundaConError    |./tp1
+cat Pruebas/04_PruebaMatrizChicaProductoPorIdentidad    |./tp1
+cat Pruebas/05_PruebaMatrizChicaProductoPorMatrizNula    |./tp1
+cat Pruebas/06_PruebaMatrizDim1ElementoNoNumerico    |./tp1
+cat Pruebas/07_PruebaMatrizDim2ElementoNoNumerico    |./tp1
+cat Pruebas/08_PruebaMatrizDimChicaMuchasLineas    |./tp1
+cat Pruebas/09_PruebaMatrizDimEs0    |./tp1
+cat Pruebas/10_PruebaMatrizDimEsNegativa    |./tp1
+cat Pruebas/11_PruebaMatrizDimMayorACantidadDeElementos    |./tp1
+cat Pruebas/12_PruebaMatrizDimNoEnteroEsFloat    |./tp1
+cat Pruebas/13_PruebaMatrizDimNoEnteroEsString    |./tp1
+cat Pruebas/14_PruebaMatrizGrandeDim5DimEsCero    |./tp1
+cat Pruebas/15_PruebaMatrizGrandeDim5DimEsNegativa    |./tp1
+cat Pruebas/16_PruebaMatrizGrandeDim5DimNoEnteroEsFloat    |./tp1
+cat Pruebas/17_PruebaMatrizGrandeDim5DimNoEnteroEsString    |./tp1
+cat Pruebas/18_PruebaMatrizGrandeDim5ElementoNoNumerico    |./tp1
+cat Pruebas/19_PruebaMatrizGrandeDim5MayorCantidadDeElementos    |./tp1
+cat Pruebas/20_PruebaMatrizGrandeDim5MenorCantidadDeElementos    |./tp1
+cat Pruebas/21_PruebaMatrizGrandeProductoPorIdentidad    |./tp1
+cat Pruebas/22_PruebaMatrizGrandeProductoPorMatrizNula    |./tp1
+cat Pruebas/23_PruebaMatrizGrandeVariasLineas    |./tp1
+cat Pruebas/24_PruebaMatrizChicaProductoPorInversa    |./tp1
+cat Pruebas/25_PruebaMatrizGrandeProductoPorInversa    |./tp1
+cat Pruebas/26_exampleCatedra    |./tp1
+
