@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include "mymalloc.h"
 
 typedef struct matrix {
     size_t rows;
@@ -19,8 +20,8 @@ void printArray(int len,double* array){
 
 void destroy_matrix(matrix_t* m){
     if (m != NULL){
-        free(m->array);
-        free(m);
+        myfree(m->array);
+        myfree(m);
     }
 }
 
@@ -308,7 +309,6 @@ int main(int argc, const char* argv[]){
         if (input == NULL){
             return 1;
         }
-
         matrix_a = create_matrix(dimention,dimention);
         if (matrix_a == NULL){
             free(input);
@@ -323,7 +323,6 @@ int main(int argc, const char* argv[]){
             raiseError("No se pudo allocar memoria para elementos de matriz");
             return 1;
         }
-
         fillUpMatrices(matrix_a,matrix_b, dimention,input);
 
         matrix_c = matrix_multiply(matrix_a,matrix_b);

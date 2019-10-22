@@ -1,0 +1,11 @@
+PARA DEBUGGEAR CON GDB:
+
+gcc -Wall -o tp1 tp1.c matrix_multiply.S create_matrix.S mymalloc.S -ggdb
+
+PARA COMPILAR EL PROGRAMA PARA CORRERLO:
+
+gcc -Wall -o tp1 tp1.c matrix_multiply.S create_matrix.S mymalloc.S
+
+PARA OBTENER CODIGO MIPS:
+
+gcc -Wall -O0 -S -mrnames tp1.c

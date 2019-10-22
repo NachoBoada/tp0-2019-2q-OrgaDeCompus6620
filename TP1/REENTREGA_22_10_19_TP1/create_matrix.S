@@ -10,7 +10,7 @@ create_matrix:
 #Se crea stack frame de la callee
 
 	.frame 	$fp,40,ra
-	subu 	sp,sp,24
+	subu 	sp,sp,40
 
 #Se crea SRA de la callee
 
@@ -53,34 +53,33 @@ create_matrix:
 
     lw t0,40($fp)               # cargo rows (el valor numerico)
     lw t1,16($fp)               # cargo matriz (pero tambien estoy apuntando a matriz->rows)
-    sw t0,0(t1)                    # cargo el valor numerico de row en matriz->rows
+    sw t0,0(t1)                 # cargo el valor numerico de row en matriz->rows
 
     lw t0,44($fp)               # cargo cols (el valor numerico)
     lw t1,16($fp)               # cargo matriz
     addiu t1,t1,4               # apunto a matriz->cols
-    sw t0,0(t1)                    # cargo el valor numerico de cols en matriz->cols
+    sw t0,0(t1)                 # cargo el valor numerico de cols en matriz->cols
 
     lw t0,20($fp)               # cargo array
     lw t1,16($fp)               # cargo matriz
-    addiu t0,t1,8               # apunto a matriz->array
-    sw t0,0(t1)                    # cargo el valor de array en matriz->array 
+    addiu t1,t1,8               # apunto a matriz->array
+    sw t0,0(t1)                 # cargo el valor de array en matriz->array 
 
     lw t1,16($fp)               # cargo matriz
     move v0,t1                  # cargo el puntero a matriz a v0 para retorno
-	b ret
-
+	b return_create_matrix
 
 error1:
     li v0,0                     # se retorna NULL (osea 0)
-    b ret
+    b return_create_matrix
 
 error2:
     lw a0,16($fp)               # cargo matriz
     jal myfree
     li v0,0                     # se retorna NULL (osea 0)
-    b ret
+    b return_create_matrix
 
-ret:	
+return_create_matrix:	
     lw	ra,32(sp)
 	lw	$fp,28(sp)
 	addu sp,sp,40
