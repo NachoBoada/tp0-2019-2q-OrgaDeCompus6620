@@ -1,0 +1,17 @@
+    ===================================================== STACK FRAME de matrix_multiply o main
+44  cols
+40  rows
+    ===================================================== STACK FRAME de create_matrix
+    ============================ SRA
+36  <padding>
+32  ra
+28  $fp
+24  gp
+    ============================ LTA
+20  ptr_array
+16  ptr_matrix_c
+    ============================ ABA
+12  <nada, se pone por convencion>
+8   <nada, se pone por convencion>
+4   <nada, se pone por convencion>
+0   (sizeof(double) * cols * rows) o sizeof(matrix_t)
